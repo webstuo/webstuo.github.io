@@ -1,5 +1,5 @@
 export default 
-`import wpower from "/libs/wpower/wpower.js";
+`import wpower from "../../../libs/wpower/wpower.js";
 const { base_controller, cvm, files, lang, net, ui, ut } = wpower;
 
 class #NAME extends base_controller{

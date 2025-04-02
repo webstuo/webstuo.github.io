@@ -1,11 +1,17 @@
 import wpower from "../../../libs/wpower/wpower.js";
 const {base_controller,files,ui,cvm,net} = wpower;
 
+// Data
+import index_template_js from "../../../data/index-template.js";
+
 //
 class home extends base_controller{
     Wpowerjs = "";
     Wpowercss = "";
-    Run_Cmd = "python3 -m http.server 1234";
+    Indexjs = "";
+    Indexhtml = "";
+    Indexcss = "";
+    Run_Cmd = "cd src; python -m http.server 1234";
     Proj_Dir;
     Screen_Dirs = [];
     Com_Dirs = [];
@@ -30,6 +36,24 @@ class home extends base_controller{
         if (!Wpowercss_File){
             Wpowercss_File = await files.dir_path2file(Dir,"src/libs/wpower/wpower.css");
             await files.write_file(Wpowercss_File,this.Wpowercss);
+        }
+
+        // Main files
+        var File_Js  = await files.dir_file_exists(Dir,"src/index.js");
+        var File_Html= await files.dir_file_exists(Dir,"src/index.html");
+        var File_Css = await files.dir_file_exists(Dir,"src/index.css");
+
+        if (!File_Js){
+            File_Js = await files.dir_path2file(Dir,"src/index.js");
+            await files.write_file(File_Js,this.Indexjs);
+        }
+        if (!File_Html){
+            File_Html = await files.dir_path2file(Dir,"src/index.html");
+            await files.write_file(File_Html,this.Indexhtml);
+        }
+        if (!File_Css){
+            File_Css = await files.dir_path2file(Dir,"src/index.css");
+            await files.write_file(File_Css,this.Indexcss);
         }
 
         // Run files
@@ -119,6 +143,10 @@ class home extends base_controller{
         // For adding to apps
         this.Wpowerjs  = await net.get("libs/wpower/wpower.js","text/plain");
         this.Wpowercss = await net.get("libs/wpower/wpower.css","text/plain");
+
+        this.Indexjs   = index_template_js;
+        this.Indexhtml = await net.get("data/index-template.html","text/plain");
+        this.Indexcss  = await net.get("data/index-template.css","text/plain");
     }
 }
 
