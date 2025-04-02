@@ -117,8 +117,8 @@ class home extends base_controller{
     // Load data
     async load_data(){
         // For adding to apps
-        this.Wpowerjs  = await net.get("/libs/wpower/wpower.js","text/plain");
-        this.Wpowercss = await net.get("/libs/wpower/wpower.css","text/plain");
+        this.Wpowerjs  = await net.get("libs/wpower/wpower.js","text/plain");
+        this.Wpowercss = await net.get("libs/wpower/wpower.css","text/plain");
     }
 }
 

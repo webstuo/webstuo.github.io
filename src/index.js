@@ -16,11 +16,11 @@ function _____CORE_____(){}
 async function main(){
     lang.set_phrases(Phrases);
     await cvm.dyn_screens({
-        "home": [home_js,"/modules/screens/home"]
+        "home": [home_js,"modules/screens/home"]
     });
     await cvm.dyn_coms({        
-        "item-list": [item_list_js,"/modules/coms/item-list"],
-        "create-screen": [create_screen_js,"/modules/coms/dialogs/create-screen"]
+        "item-list": [item_list_js,"modules/coms/item-list"],
+        "create-screen": [create_screen_js,"modules/coms/dialogs/create-screen"]
     });
     cvm.render_screen("home",{});
 }
