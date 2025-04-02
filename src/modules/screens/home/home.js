@@ -127,6 +127,12 @@ class home extends base_controller{
         });
     }
 
+    //
+    run_app(Ev){
+        ui.alert(`Open project folder and run either of run.sh, run.ps1, or run.cmd. 
+            Remember to install Python first.`);
+    }
+
     _____CORE_____(){}
 
     // Init
