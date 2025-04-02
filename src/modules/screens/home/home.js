@@ -129,7 +129,9 @@ class home extends base_controller{
 
     //
     run_app(Ev){
-        ui.alert(`Open project folder and run either of run.sh, run.ps1, or run.cmd. 
+        ui.alert(`Open project folder and run either of run.sh, run.ps1, or run.cmd.<br> 
+            To view the app, point browser to 
+            <a target="_blank" href="http://localhost:1234">http://localhost:1234</a><br>
             Remember to install Python first.`);
     }
 
