@@ -1,0 +1,29 @@
+<div if="Proj_Name==null">
+    Click button above to create/load project.
+</div>
+<div if="Proj_Name!=null">
+    <div>
+        <div><big>
+            Screens
+            <span class="btn" onclick="dialog:create-screen">➕</span>
+        </big></div>
+        <div>            
+            <div if="Screens==null || Screens.length==0">No screens found</div>
+            <span for="Scr: let Scr of Screens">
+                <button onclick="menu:edit-ctx-menu">{{Name}}</button>
+            <span>
+        </div>
+    </div>
+    <div>&nbsp;</div>
+
+    <div>
+        <div><big>
+            Components
+            <span class="btn">➕</span>
+        </big></div>
+        <div>
+            <div if="Components==null || Components.length==0">No components found</div>
+        </div>
+    </div>
+</div>
+<!-- EOF -->

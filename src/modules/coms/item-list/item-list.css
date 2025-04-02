@@ -1,0 +1,7 @@
+.btn {
+    cursor:pointer;
+}
+.btn:hover{
+    background-color:yellow;
+}
+/* EOF */
