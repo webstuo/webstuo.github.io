@@ -25,6 +25,10 @@ class home extends base_controller{
 
     //
     async check_and_write_core(Dir){
+        // Project marker file
+        var F = await files.dir_path2file(Dir,"webstuo.cfg"); // JSON
+        await files.write_file(F,"{}");
+
         // Wpower
         var Wpowerjs_File = await files.dir_file_exists(Dir,"src/libs/wpower/wpower.js");
         var Wpowercss_File= await files.dir_file_exists(Dir,"src/libs/wpower/wpower.css");
@@ -88,10 +92,16 @@ class home extends base_controller{
         else
             var Dir = this.Proj_Dir;
 
-        // Base source code
-        if (open){
-            await this.check_and_write_core(Dir);
+        // Check if folder is alright
+        var Items      = await files.dir_get_items(Dir);
+        var cfg_exists = await files.dir_file_exists(Dir,"webstuo.json");
+
+        if (Items.length>0 && cfg_exists==false){
+            ui.alert("Error: The folder is not empty and it is not Webstuo project folder");
+            return;
         }
+        // Ensure being Webstuo proj dir
+        await files.dir_file_touch(Dir,"webstuo.json");
 
         // Get screen dirs
         var Tmpdir = await files.dir_path2dir(Dir,"src/modules/screens");
@@ -125,6 +135,12 @@ class home extends base_controller{
         cvm.get_last_com("item-list").rerender({
             Proj_Name:Dir.name, Screens, Components
         });
+    }
+
+    // Build app
+    async build_app(Ev){
+        await this.check_and_write_core();
+        ui.alert("Core files written to project folder");
     }
 
     //
