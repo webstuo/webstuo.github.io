@@ -15,6 +15,7 @@ class home extends base_controller{
     Proj_Dir;
     Screen_Dirs = [];
     Com_Dirs = [];
+    Termi = null;
 
     // Ctor
     constructor(){
@@ -23,21 +24,22 @@ class home extends base_controller{
 
     _____UTILS_____(){}
 
-    //
+    // Write base code to project
+    // NOTICE: Most of conditions are 'true', to write latest code base
     async check_and_write_core(Dir){
         // Project marker file
-        var F = await files.dir_path2file(Dir,"webstuo.cfg"); // JSON
+        var F = await files.dir_path2file(Dir,"webstuo.json"); // JSON
         await files.write_file(F,"{}");
 
         // Wpower
         var Wpowerjs_File = await files.dir_file_exists(Dir,"src/libs/wpower/wpower.js");
         var Wpowercss_File= await files.dir_file_exists(Dir,"src/libs/wpower/wpower.css");
 
-        if (!Wpowerjs_File){
+        if (true || !Wpowerjs_File){
             Wpowerjs_File = await files.dir_path2file(Dir,"src/libs/wpower/wpower.js");
             await files.write_file(Wpowerjs_File,this.Wpowerjs);
         }
-        if (!Wpowercss_File){
+        if (true || !Wpowercss_File){
             Wpowercss_File = await files.dir_path2file(Dir,"src/libs/wpower/wpower.css");
             await files.write_file(Wpowercss_File,this.Wpowercss);
         }
@@ -47,15 +49,15 @@ class home extends base_controller{
         var File_Html= await files.dir_file_exists(Dir,"src/index.html");
         var File_Css = await files.dir_file_exists(Dir,"src/index.css");
 
-        if (!File_Js){
+        if (true || !File_Js){
             File_Js = await files.dir_path2file(Dir,"src/index.js");
             await files.write_file(File_Js,this.Indexjs);
         }
-        if (!File_Html){
+        if (true || !File_Html){
             File_Html = await files.dir_path2file(Dir,"src/index.html");
             await files.write_file(File_Html,this.Indexhtml);
         }
-        if (!File_Css){
+        if (true || !File_Css){
             File_Css = await files.dir_path2file(Dir,"src/index.css");
             await files.write_file(File_Css,this.Indexcss);
         }
@@ -65,15 +67,15 @@ class home extends base_controller{
         var File_Ps1 = await files.dir_file_exists(Dir,"run.ps1");
         var File_Cmd = await files.dir_file_exists(Dir,"run.cmd");
 
-        if (!File_Sh){
+        if (true || !File_Sh){
             File_Sh = await files.dir_path2file(Dir,"run.sh");
             await files.write_file(File_Sh,this.Run_Cmd+"\n");
         }
-        if (!File_Ps1){
+        if (true || !File_Ps1){
             File_Ps1 = await files.dir_path2file(Dir,"run.ps1");
             await files.write_file(File_Ps1,this.Run_Cmd+"\n");
         }
-        if (!File_Cmd){
+        if (true || !File_Cmd){
             File_Cmd = await files.dir_path2file(Dir,"run.cmd");
             await files.write_file(File_Cmd,this.Run_Cmd+"\n");
         }
@@ -139,7 +141,12 @@ class home extends base_controller{
 
     // Build app
     async build_app(Ev){
-        await this.check_and_write_core();
+        if (this.Proj_Dir==null){
+            ui.alert("Please load project first");
+            return;
+        }
+        ui.notif("Writing to project dir...","blue");
+        await this.check_and_write_core(this.Proj_Dir);
         ui.alert("Core files written to project folder");
     }
 
@@ -160,6 +167,27 @@ class home extends base_controller{
 
     // Render
     render(){
+        var Term = new Terminal({theme: {
+            background:'#eee', foreground:"black"
+        }});
+        this.Termi = Term;
+
+        Term.open(d$("#Term-Box"));
+        Term.write("Terminal for managing servers...");
+        Term.onKey(Ev=> {
+            const Key = Ev.key;  
+            
+            if (Key === '\r') { // Enter key
+                Term.write('\r\n'); // New line
+            } 
+            else 
+            if (Key === '\u007F') { // Backspace key
+                Term.write('\b\x20\b'); // Erase last character
+            } 
+            else {
+                Term.write(Key); // Display typed character
+            }
+        });
     }
 
     // Load data

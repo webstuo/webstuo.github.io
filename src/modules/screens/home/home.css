@@ -11,8 +11,26 @@ body { overflow:hidden; }
 #Right-Col{
     width:25%; padding:1.5rem;
 }
+#Caption {
+    border-top:1px solid white;
+}
 #Item-List{
     width:100%; height:calc(100vh - 10.5rem); background-color:#ddd;
     padding:1.5rem;
+}
+#Js-Methods-Box {
+    height:calc(100vh - 6 * 1.5rem); width:calc(25vw - 3rem);
+    overflow:auto; background-color:#eee; padding:1.5rem;
+}
+#Term-Box {
+    width:calc(25vw - 3rem); height:calc(100vh - 7 * 1.5rem);
+    background-color:#eee; position:fixed; right:1.5rem;
+    bottom:1.5rem; padding-top:1.5rem;
+}
+.sort-btn {
+    cursor:pointer;
+}
+.sort-btn:hover {
+    background-color:yellow;
 }
 /* EOF */
