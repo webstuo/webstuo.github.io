@@ -1,0 +1,9 @@
+.with-left-col {
+    display:flex; flex-direction:row;
+}
+.wlc-left {
+    width:25%; background-color:#eee; border:1px solid white;
+}
+.wlc-main {
+    width:75%; background-color:#eee; border:1px solid white;
+}

@@ -1,0 +1,9 @@
+.with-right-col {
+    display:flex; flex-direction:row;
+}
+.wrc-main {
+    width:75%; background-color:#eee; border:1px solid white;
+}
+.wrc-right {
+    width:25%; background-color:#eee; border:1px solid white;
+}

@@ -1,6 +1,9 @@
 import wpower from "../../../../libs/wpower/wpower.js";
 const {cvm,files,base_controller} = wpower;
 
+// Modules
+import utils from "../../../utils.js";
+
 // Data
 import controller_template from "../../../../data/controller-template.js";
 
@@ -39,6 +42,11 @@ class create_screen extends base_controller{
             return;
         }
 
+        // Get template
+        var Defaulthtml = `${Name}\n<!-- EOF -->`;
+        var Defaultcss = `/* EOF */`;
+        var [Html,Css] = await utils.choose_template(Defaulthtml, Defaultcss);
+
         // Create folder and file
         var Js_File  = await files.dir_path2file(Dir,`src/modules/screens/${Name}/${Name}.js`);
         var Html_File= await files.dir_path2file(Dir,`src/modules/screens/${Name}/${Name}.html`);
@@ -46,8 +54,8 @@ class create_screen extends base_controller{
 
         var Code = controller_template.replaceAll("#NAME",Class_Name);
         await files.write_file(Js_File,Code);
-        await files.write_file(Html_File,`${Name}\n<!-- EOF -->`);
-        await files.write_file(Css_File,`/* EOF */`);
+        await files.write_file(Html_File, Html);
+        await files.write_file(Css_File, Css);
 
         // Rerender
         cvm.get_screen("home").open_proj(false);
