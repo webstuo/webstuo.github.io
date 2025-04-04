@@ -30,6 +30,13 @@ class create_com extends base_controller{
         Name           = Name.toLowerCase();
         var Class_Name = Name.replaceAll("-","_");
 
+        // Check keyword
+        if (utils.JS_KEYWORDS.indexOf(Class_Name) >= 0){
+            ui.alert("Can't be the same as JS keywords:<br>"+
+                utils.JS_KEYWORDS.toString().replaceAll(",",", ") );
+            return;
+        }
+
         // Check if existing
         var Home = cvm.get_screen("home");
         var Dir  = Home.Proj_Dir;
