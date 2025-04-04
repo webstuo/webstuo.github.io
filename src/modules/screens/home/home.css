@@ -33,4 +33,30 @@ body { overflow:hidden; }
 .sort-btn:hover {
     background-color:yellow;
 }
+.add-met-btn {
+    cursor:pointer;
+}
+.add-met-btn:hover {
+    background-color:yellow;
+}
+#Js-Edit-Wrap {
+    width:calc(50vw - 3rem); height:calc(100vh - 6 * 1.5rem); 
+    position:fixed; left:calc(25vw + 1.5rem); bottom:1.5rem;
+    background-color:#eee;
+}
+#Js-Edit {
+    width:100%; height:calc(100vh - 7.5 * 1.5rem);
+}
+.CodeMirror-wrap {
+    height:calc(100vh - 7.5 * 1.5rem) !important;
+}
+.CodeMirror-line * {
+    font-family:monospace !important;
+}
+#Js-Close-Btn {
+    float:right; height:1.5rem;
+}
+#Js-Save-Btn {
+    margin-bottom:5px;
+}
 /* EOF */

@@ -1,0 +1,28 @@
+<div if="first_render">
+    Click 'Edit JS' on a screen or component to show the method list to edit.
+</div>
+<div if="!first_render">
+    <hr>
+    <a href="javascript:" onclick="method:load_staticblock">Static Block</a>
+    <hr>
+    <a href="javascript:" onclick="method:load_propsblock">Properties Block</a>
+    <hr>
+    
+    <a href="javascript:" name="constructor" title="JS constructor"
+        onclick="method:load_method_js">constructor</a><br>
+    <a href="javascript:" name="init" title="Runs before rendering DOM"
+        onclick="method:load_method_js">init</a><br>
+    <a href="javascript:" name="render" title="Runs after rendering DOM" 
+        onclick="method:load_method_js">render</a><br>
+    <a href="javascript:" name="load_data" title="Extra method for loading more data"
+        onclick="method:load_method_js">load_data</a>
+    <hr>
+
+    <div for="M: let M of Methods" class="cus-method-item">
+        <a href="javascript:" name="{{this}}" 
+            onclick="method:load_method_js">{{this}}</a>
+        <span class="method-del-btn" name="{{this}}" 
+            onclick="method:del_method">❌</span>            
+    </div>
+</div>
+<!-- EOF -->

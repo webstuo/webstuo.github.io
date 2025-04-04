@@ -1,0 +1,12 @@
+.with-both-sides {
+    display:flex; flex-direction:row;
+}
+.wbs-left {
+    width:25%; background-color:#eee; border:1px solid white;
+}
+.wbs-main {
+    width:50%; background-color:#eee; border:1px solid white;
+}
+.wbs-right {
+    width:25%; background-color:#eee; border:1px solid white;
+}

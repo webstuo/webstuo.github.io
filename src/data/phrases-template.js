@@ -1,4 +1,5 @@
-var Phrases = {
+export default
+`var Phrases = {
     MESSAGE:{
         en_int: "Message"
     },
@@ -28,4 +29,5 @@ var Phrases = {
     }
 };
 export default Phrases;
+// EOF`;
 // EOF

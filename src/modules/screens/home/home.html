@@ -10,10 +10,10 @@
                 <b>Sort</b>: 
                 <span class="sort-btn" title="Alphabetic">🆎</span>
                 <span class="sort-btn" title="By region in code">🗺️</span>
+                <span class="add-met-btn" onclick="method:add_new_method" 
+                    title="Add new method">➕</span>
             </div>
-            <div style="background-color:yellow; color:black;">
-                Project in incubator, coming soon
-            </div>
+            <div com="method-list"></div>
         </div>
     </div>
     <div id="Centre-Col">
@@ -61,6 +61,17 @@
         <div id="Term-Box"></div>
     </div>    
 </div>
+
+<div id="Js-Edit-Wrap" hidden>
+    <div><big>
+        JS Editor
+        <button id="Js-Save-Btn" onclick="method:save_to_file">Save to File</button>
+        <span id="Js-File-Name">...</span>
+        <button id="Js-Close-Btn" onclick="method:hide_js_edit">❌</button>
+    </big></div>
+    <textarea id="Js-Edit">...</textarea>
+</div>
+
 <span style="display:inline-block; position:fixed; right:1.5rem;
     bottom:1.5rem;">
     <a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSf_Y6P5bdfvdes9FlZRU1PMbKBuOTnzXycYMq6HqI70wIkr6w/viewform?usp=header">Send Feedback</a>

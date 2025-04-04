@@ -19,7 +19,7 @@ class item_list extends base_controller{
     _____UI_ACTIONS_____(){}
 
     //
-    async edit_a_js_method(Ev){
+    async edit_js(Ev){
         var Ele  = Ev.target;
         var Type = Ele.attr("type");
         var Name = Ele.attr("name");
@@ -36,12 +36,14 @@ class item_list extends base_controller{
             var [Handle,Js] = await files.read_file(File);
         }
 
-        // Get abstract syntax tree
-        var Mnames  = utils.get_methods(Js);        
-        var Methods = {};
-        for (let Name of Mnames) Methods[Name]=Name;
+        // Get methods from abstract syntax tree
+        var Methods = utils.get_methods(Js);        
 
-        var Method = await ui.select("Choose a method to edit",Methods);
+        // Show editor
+        var Home = cvm.get_screen("home");
+        Home.Cur_Js_Type = Type;
+        Home.Cur_Js_File = Name;
+        Home.show_js_methods(Methods);
     }
 
     //

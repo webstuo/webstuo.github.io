@@ -1,0 +1,10 @@
+.method-del-btn {
+    opacity:.25; cursor:pointer; float:right;
+}
+.method-del-btn:hover {
+    opacity:1;
+}
+.cus-method-item:hover {
+    background-color:ivory;
+}
+/* EOF */
