@@ -1,6 +1,6 @@
 // Utils
 // Libs
-import wpower from "../../../libs/wpower/wpower.js";
+import wpower from "../libs/wpower/wpower.js";
 const {ut,ui,cvm,base_controller,files} = wpower;
 
 function _____UTILS_____(){}
