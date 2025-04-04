@@ -22,7 +22,71 @@ class home extends base_controller{
         super();
     }
 
-    _____UTILS_____(){}
+    _____BUILD_____(){}
+
+    // Add items to dyn_screens, and dyn_coms
+    async add_dyn_items(Html){
+        // Get screen dirs
+        var Dir = this.Proj_Dir;
+        var Tmpdir = await files.dir_path2dir(Dir,"src/modules/screens");
+        var Screen_Dirs = await files.dir_get_subdirs(Tmpdir);
+        var Scr_Names = Screen_Dirs.map(X=>X.name);
+
+        // Get component dirs
+        var Tmpdir = await files.dir_path2dir(Dir,"src/modules/coms");
+        var Com_Dirs = await files.dir_get_subdirs(Tmpdir);
+        var Com_Names = Com_Dirs.map(X=>X.name);
+
+        // Imports of screen
+        Scr_Names = Scr_Names.filter(X=>X!="home");
+        var Code = "";
+        function id(Str){ return Str.replaceAll("-","_"); }
+
+        for (let Name of Scr_Names)
+            Code += `import ${id(Name)} from "./modules/screens/${Name}/${Name}.js";\n`;
+
+        Html = Html.replace("#IMPORT_SCREENS",Code);
+
+        // Imports of components
+        var Code = "";
+
+        for (let Name of Com_Names)
+            Code += `import ${id(Name)} from "./modules/coms/${Name}/${Name}.js";\n`;
+
+        Html = Html.replace("#IMPORT_COMS",Code.trim());
+
+        // Dyn load of screens
+        var Indent = "\x20".repeat(8);
+        var Code = "";
+
+        for (let Name of Scr_Names)
+            Code += `${Indent}${id(Name)}: [${id(Name)},"modules/screens/${Name}"],\n`;
+        
+        if (Code.length>0)
+            Html = Html.replace("#SCREEN_LIST", Code);
+        else
+            Html = Html.replace("#SCREEN_LIST", "// More here");
+
+        // Dyn load of screens        
+        var Code = "";
+        var Indent;
+
+        for (let i=0; i<Com_Names.length; i++){
+            if (i>0) Indent = "\x20".repeat(8);
+            else     Indent = "";
+
+            let Name = Com_Names[i];
+            Code += `${Indent}${id(Name)}: [${id(Name)},"modules/coms/${Name}"],\n`;
+        }
+        
+        if (Code.trim().length>0)
+            Html = Html.replace("#COM_LIST", Code.trim());
+        else
+            Html = Html.replace("#COM_LIST", "// More here");
+
+        // After modifying
+        return Html;
+    }
 
     // Write base code to project
     // NOTICE: Most of conditions are 'true', to write latest code base
@@ -51,7 +115,7 @@ class home extends base_controller{
 
         if (true || !File_Js){
             File_Js = await files.dir_path2file(Dir,"src/index.js");
-            await files.write_file(File_Js,this.Indexjs);
+            await files.write_file(File_Js,await this.add_dyn_items(this.Indexjs));
         }
         if (true || !File_Html){
             File_Html = await files.dir_path2file(Dir,"src/index.html");
@@ -93,6 +157,8 @@ class home extends base_controller{
         }
         else
             var Dir = this.Proj_Dir;
+
+        ui.notif("Loading project");
 
         // Check if folder is alright
         var Items      = await files.dir_get_items(Dir);
@@ -137,6 +203,7 @@ class home extends base_controller{
         cvm.get_last_com("item-list").rerender({
             Proj_Name:Dir.name, Screens, Components
         });
+        ui.notif("Project loaded");
     }
 
     // Build app
@@ -152,7 +219,7 @@ class home extends base_controller{
 
     //
     run_app(Ev){
-        ui.alert(`Open project folder and run either of run.sh, run.ps1, or run.cmd.<br> 
+        ui.alert(`Open shell <b>in project folder</b> and run either of run.sh, run.ps1, or run.cmd.<br> 
             To view the app, point browser to 
             <a target="_blank" href="http://localhost:1234">http://localhost:1234</a><br>
             Remember to install Python first.`);

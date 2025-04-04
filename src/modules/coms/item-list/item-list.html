@@ -12,7 +12,9 @@
         <div>            
             <div if="Screens==null || Screens.length==0">No screens found</div>
             <span for="Scr: let Scr of Screens">
-                <button onclick="menu:edit-ctx-menu">{{Name}}</button>
+                <button onclick="menu:edit-ctx-menu" type="screen"
+                    name="{{Name}}"
+                    >{{Name}}</button>
             <span>
         </div>
     </div>
@@ -21,10 +23,17 @@
     <div>
         <div><big>
             Components
-            <span class="btn">➕</span>
+            <span class="btn" onclick="dialog:create-com" 
+                title="Component can be loaded with com='component-name' attribute in tag"
+                >➕</span>
         </big></div>
         <div>
             <div if="Components==null || Components.length==0">No components found</div>
+            <span for="Com: let Com of Components">
+                <button onclick="menu:edit-ctx-menu" type="component"
+                    name="{{Name}}"
+                    >{{Name}}</button>
+            <span>
         </div>
     </div>
 </div>

@@ -13,7 +13,10 @@ var Phrases = {
     },
     DIALOG:{
         en_int: "Dialog"
-    }    
+    },
+    SELECT:{
+        en_int: "Select"
+    }
 };
 export default Phrases;
 // EOF
