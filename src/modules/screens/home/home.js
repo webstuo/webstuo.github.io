@@ -64,11 +64,16 @@ class home extends base_controller{
         Html = Html.replace("#IMPORT_COMS",Code.trim());
 
         // Dyn load of screens
-        var Indent = "\x20".repeat(8);
+        var Indent;
         var Code = "";
 
-        for (let Name of Scr_Names)
+        for (let i=0; i<Scr_Names.length; i++){
+            if (i>0) Indent = "\x20".repeat(8);
+            else     Indent = "";
+
+            let Name = Scr_Names[i];
             Code += `${Indent}"${Name}": [${id(Name)},"modules/screens/${Name}"],\n`;
+        }
         
         if (Code.length>0)
             Html = Html.replace("#SCREEN_LIST", Code);
