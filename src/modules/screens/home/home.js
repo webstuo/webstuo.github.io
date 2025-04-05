@@ -68,7 +68,7 @@ class home extends base_controller{
         var Code = "";
 
         for (let Name of Scr_Names)
-            Code += `${Indent}${id(Name)}: [${id(Name)},"modules/screens/${Name}"],\n`;
+            Code += `${Indent}"${Name}": [${id(Name)},"modules/screens/${Name}"],\n`;
         
         if (Code.length>0)
             Html = Html.replace("#SCREEN_LIST", Code);
@@ -84,9 +84,9 @@ class home extends base_controller{
             else     Indent = "";
 
             let Name = Com_Names[i];
-            Code += `${Indent}${id(Name)}: [${id(Name)},"modules/coms/${Name}"],\n`;
+            Code += `${Indent}"${Name}": [${id(Name)},"modules/coms/${Name}"],\n`;
         }
-        
+
         if (Code.trim().length>0)
             Html = Html.replace("#COM_LIST", Code.trim());
         else
@@ -235,9 +235,10 @@ class home extends base_controller{
             ui.alert("Please load project first");
             return;
         }
-        var Name = await ui.prompt("Enter app name:");
+        var Name = await ui.prompt("Enter app name:",sessionStorage.App_Name);
         if (Name==null || Name.trim().length==0) return;
         Name = Name.replaceAll("<","&lt;").replaceAll(">","&gt;");
+        sessionStorage.App_Name = Name;
 
         ui.notif("Writing to project dir...","blue");
         await this.check_and_write_core(Name,this.Proj_Dir);
