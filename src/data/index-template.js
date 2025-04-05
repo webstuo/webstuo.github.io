@@ -1,6 +1,6 @@
 export default 
 `import wpower from "./libs/wpower/wpower.js";
-const {cvm} = wpower;
+const {base_controller, cvm, files, lang, net, ui, ut, idb, enc, gfs} = wpower;
 
 // Screens and components
 import home_js from "./modules/screens/home/home.js";

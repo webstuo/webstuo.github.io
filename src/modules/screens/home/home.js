@@ -20,10 +20,11 @@ class home extends base_controller{
     Com_Dirs = [];
     Termi = null;
 
-    Js_Editor = null;
-    Cur_Js_Type = null;
-    Cur_Js_File = null;
-    Cur_Js_Method = null;
+    Js_Editor     = null;
+    Cur_Special   = null; // "index.css", or other values
+    Cur_Js_Type   = null;
+    Cur_Js_File   = null;
+    Cur_Js_Method = null;    
 
     // Ctor
     constructor(){
@@ -103,7 +104,7 @@ class home extends base_controller{
 
     // Write base code to project
     // NOTICE: Most of conditions are 'true', to write latest code base
-    async check_and_write_core(Projname, Dir){
+    async check_and_write_core(Dir){
         // Project marker file
         var F = await files.dir_path2file(Dir,"webstuo.json"); // JSON
         await files.write_file(F,"{}");
@@ -130,11 +131,13 @@ class home extends base_controller{
             File_Js = await files.dir_path2file(Dir,"src/index.js");
             await files.write_file(File_Js,await this.add_dyn_items(this.Indexjs));
         }
-        if (true || !File_Html){
+
+        // ⚠️Do not overwrite index.html and index.css (to change by studio user)
+        if (!File_Html){
             File_Html = await files.dir_path2file(Dir,"src/index.html");
-            await files.write_file(File_Html,this.Indexhtml.replace("#APP_NAME",Projname));
+            await files.write_file(File_Html,this.Indexhtml);
         }
-        if (true || !File_Css){
+        if (!File_Css){
             File_Css = await files.dir_path2file(Dir,"src/index.css");
             await files.write_file(File_Css,this.Indexcss);
         }
@@ -240,13 +243,14 @@ class home extends base_controller{
             ui.alert("Please load project first");
             return;
         }
-        var Name = await ui.prompt("Enter app name:",sessionStorage.App_Name);
+        // Deprecated: Studio user to edit index.html
+        /* var Name = await ui.prompt("Enter app name:",sessionStorage.App_Name);
         if (Name==null || Name.trim().length==0) return;
         Name = Name.replaceAll("<","&lt;").replaceAll(">","&gt;");
-        sessionStorage.App_Name = Name;
+        sessionStorage.App_Name = Name; */
 
         ui.notif("Writing to project dir...","blue");
-        await this.check_and_write_core(Name,this.Proj_Dir);
+        await this.check_and_write_core(this.Proj_Dir);
         ui.alert("Core files written to project folder");
     }
 
@@ -264,6 +268,20 @@ class home extends base_controller{
     async get_jsfile_code(){
         var Filejs = await utils.get_jsfile_code(this.Cur_Js_Type, this.Cur_Js_File);
         return Filejs;
+    }
+
+    // Get index.html code
+    async get_indexhtml_code(){
+        var File    = await files.dir_path2file(this.Proj_Dir, "src/index.html");
+        var [_,Html]= await files.read_file(File);
+        return Html;
+    }
+
+    // Get index.css code
+    async get_indexcss_code(){
+        var File    = await files.dir_path2file(this.Proj_Dir, "src/index.css");
+        var [_,Css] = await files.read_file(File);
+        return Css;
     }
 
     //
@@ -380,6 +398,22 @@ class home extends base_controller{
 
     // Save to file
     async save_to_file(Ev){
+        if (this.Cur_Special=="index.html"){
+            var Html = this.Js_Editor.getValue();
+            var File = await files.dir_path2file(this.Proj_Dir, "src/index.html");
+            await files.write_file(File,Html);
+            ui.alert("Global index.html written");
+            return;
+        }
+        if (this.Cur_Special=="index.css"){
+            var Css  = this.Js_Editor.getValue();
+            var File = await files.dir_path2file(this.Proj_Dir, "src/index.css");
+            await files.write_file(File,Css);
+            ui.alert("Global index.css written");
+            return;
+        }
+
+        // Normal JS blocks
         try{
             if (this.Cur_Js_Method=="---staticblock---"){
                 var Filejs   = await utils.get_jsfile_code(this.Cur_Js_Type, this.Cur_Js_File);
@@ -506,7 +540,8 @@ class home extends base_controller{
         if (Code==null) return;
 
         this.Cur_Js_Method = "---staticblock---";
-        this.show_js_edit(Code);
+        this.Cur_Special = null; // Normal js
+        this.show_js_edit(Code);        
     }
 
     //
@@ -516,7 +551,8 @@ class home extends base_controller{
         if (Code==null) return;
 
         this.Cur_Js_Method = "---propsblock---";
-        this.show_js_edit(Code);
+        this.Cur_Special = null; // Normal js
+        this.show_js_edit(Code);        
     }
 
     //
@@ -526,7 +562,22 @@ class home extends base_controller{
         if (Code==null) return;
 
         this.Cur_Js_Method = Methodname;
-        this.show_js_edit(Code);
+        this.Cur_Special = null; // Normal js
+        this.show_js_edit(Code);        
+    }
+
+    //
+    async edit_global_html(){
+        var Fullhtml = await this.get_indexhtml_code();
+        this.Cur_Special = "index.html";
+        this.show_special_edit(Fullhtml);        
+    }
+
+    //
+    async edit_global_css(){
+        var Fullcss = await this.get_indexcss_code();
+        this.Cur_Special = "index.css";
+        this.show_special_edit(Fullcss);        
     }
 
     //
@@ -555,6 +606,14 @@ class home extends base_controller{
         d$("#Js-File-Name").innerHTML = this.Cur_Js_Type+": "+this.Cur_Js_File;
         d$("#Js-Edit-Wrap").removeAttribute("hidden");
         this.Js_Editor.setValue(Code);        
+    }
+
+    // Show css edit
+    show_special_edit(Anycode){
+        // Show
+        d$("#Js-File-Name").innerHTML = this.Cur_Special;
+        d$("#Js-Edit-Wrap").removeAttribute("hidden");
+        this.Js_Editor.setValue(Anycode);        
     }
 
     // Hide js edit
@@ -586,6 +645,7 @@ class home extends base_controller{
             elt.style.paddingLeft = (basePadding + off) + "px";
         });
         this.Js_Editor.refresh();
+        window.Cm_Editor = this.Js_Editor;
 
         // Terminal
         var Term = new Terminal({theme: {

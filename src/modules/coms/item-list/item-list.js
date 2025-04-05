@@ -18,6 +18,16 @@ class item_list extends base_controller{
 
     _____UI_ACTIONS_____(){}
 
+    // 
+    edit_global_html(Ev){
+        cvm.get_screen("home").edit_global_html();
+    }
+
+    // 
+    edit_global_css(Ev){
+        cvm.get_screen("home").edit_global_css();
+    }
+
     //
     async edit_js(Ev){
         var Ele  = Ev.target;
