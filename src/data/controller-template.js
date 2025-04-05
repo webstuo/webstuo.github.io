@@ -1,6 +1,6 @@
 export default 
 `import wpower from "../../../libs/wpower/wpower.js";
-const { base_controller, cvm, files, lang, net, ui, ut } = wpower;
+const { base_controller, cvm, files, lang, net, ui, ut, idb, enc, gfs } = wpower;
 
 class #NAME extends base_controller{
 
