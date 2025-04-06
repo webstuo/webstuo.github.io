@@ -424,7 +424,7 @@ class home extends base_controller{
             ui.notif("Global index.css written","green");
             return;
         }
-        if (this.Cur_Special.indexOf("src/")==0){
+        if (this.Cur_Special!=null && this.Cur_Special.indexOf("src/")==0){
             var Value= this.Js_Editor.getValue();
             var File = await files.dir_path2file(this.Proj_Dir, this.Cur_Special);
             await files.write_file(File,Value);
