@@ -31,6 +31,11 @@ class home extends base_controller{
         super();
     }
 
+    // Util
+    static id(Str){ 
+        return Str.replaceAll("-","_"); 
+    }
+
     _____BUILD_____(){}
 
     // Add items to dyn_screens, and dyn_coms
@@ -132,6 +137,10 @@ class home extends base_controller{
             await files.write_file(File_Js,await this.add_dyn_items(this.Indexjs));
         }
 
+        // Folders (touch to make them exist)        
+        await files.dir_path2file(Dir, "src/img/.gitkeep");
+        await files.dir_path2file(Dir, "src/modules/menus/.gitkeep");
+
         // ⚠️Do not overwrite index.html and index.css (to change by studio user)
         if (!File_Html){
             File_Html = await files.dir_path2file(Dir,"src/index.html");
@@ -142,15 +151,17 @@ class home extends base_controller{
             await files.write_file(File_Css,this.Indexcss);
         }
 
-        // Icon
-        var Iconpng = await (await fetch("data/app-icon-default.png")).blob();
-        var Iconfile= await files.dir_path2file(Dir,"src/img/icon.png");
-        await files.write_file(Iconfile, Iconpng);
-
         // Data files
-        var Phrases_Js = await files.dir_file_exists(Dir,"src/modules/phrases.js");
+        // ⚠️Do not overwrite (to change by studio user)
+        if (!(await files.dir_file_exists(Dir,"src/img/icon.png"))) {
+            var Iconpng = await (await fetch("data/app-icon-default.png")).blob();
+            var Iconfile= await files.dir_path2file(Dir,"src/img/icon.png");
+            await files.write_file(Iconfile, Iconpng);
+        }
 
         // ⚠️Do not overwrite this file, edited by dev using Webstuo
+        var Phrases_Js = await files.dir_file_exists(Dir,"src/modules/phrases.js");
+
         if (!Phrases_Js){
             Phrases_Js = await files.dir_path2file(Dir,"src/modules/phrases.js");
             await files.write_file(Phrases_Js,Phrases);
@@ -402,14 +413,21 @@ class home extends base_controller{
             var Html = this.Js_Editor.getValue();
             var File = await files.dir_path2file(this.Proj_Dir, "src/index.html");
             await files.write_file(File,Html);
-            ui.alert("Global index.html written");
+            ui.notif("Global index.html written","green");
             return;
         }
         if (this.Cur_Special=="index.css"){
             var Css  = this.Js_Editor.getValue();
             var File = await files.dir_path2file(this.Proj_Dir, "src/index.css");
             await files.write_file(File,Css);
-            ui.alert("Global index.css written");
+            ui.notif("Global index.css written","green");
+            return;
+        }
+        if (this.Cur_Special.indexOf("src/")==0){
+            var Value= this.Js_Editor.getValue();
+            var File = await files.dir_path2file(this.Proj_Dir, this.Cur_Special);
+            await files.write_file(File,Value);
+            ui.notif("Written to "+this.Cur_Special);
             return;
         }
 
@@ -533,6 +551,23 @@ class home extends base_controller{
 
     _____Other_Uis_____(){}
 
+    // 
+    async prompt_for_dashed_name(){
+        var Name = await ui.prompt("Enter a name:");
+        if (Name==null || Name.trim().length==0) return null;
+        Name = Name.trim();
+
+        if (Name.match(/^[0-9a-z-]+$/) == null){
+            ui.alert("Invalid name, lower-case alphabetic and dash only");
+            return null;
+        }
+        if (Name.match(/^[0-9]+/) != null){
+            ui.alert("Can't start with digits");
+            return null;
+        }
+        return Name;
+    }
+
     //
     async edit_staticblock(){
         var Fulljs = await utils.get_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File);
@@ -578,6 +613,115 @@ class home extends base_controller{
         var Fullcss = await this.get_indexcss_code();
         this.Cur_Special = "index.css";
         this.show_special_edit(Fullcss);        
+    }
+
+    // 
+    async add_module(){
+        var Name = await this.prompt_for_dashed_name();
+        if (Name==null) return;
+        var Dir = this.Proj_Dir;
+        const id = thisclass.id;
+
+        // Check module existence
+        var Path = `src/modules/${Name}.js`;
+
+        if (await files.dir_file_exists(Dir, Path)){
+            ui.alert("Module of such name is existing");
+            return;
+        }
+
+        // Write new module
+        var Code = 
+        `class ${id(Name)} {\n}\n\n`+
+        `const thisclass = ${id(Name)};\n`+
+        `export default thisclass;\n`;
+
+        var File = await files.dir_path2file(Dir, Path);
+        await files.write_file(File,Code);
+        ui.alert(`Added module '${Name}'`);
+    }
+
+    //
+    async edit_module(){
+        // Get module list
+        var Dir = this.Proj_Dir;
+        Dir = await files.dir_path2dir(Dir,"src/modules");
+        var Files = (await files.dir_get_files(Dir)).map(X=>X.name);
+        
+        if (Files.length==0){
+            ui.alert("No modules to edit, add first");
+            return;
+        }
+        Files.sort();
+
+        // Select
+        var Obj = {};
+        for (let Name of Files) 
+            if (Name.match(/\.js$/)!=null) Obj[Name]=Name;
+
+        var Choice = await ui.select("Choose a module to edit:",Obj);
+        if (Choice==null) return;
+
+        // Show editor
+        var File     = await files.dir_path2file(Dir, Choice);
+        var [_,Code] = await files.read_file(File);
+        this.Cur_Special = "src/modules/"+Choice;
+        this.show_special_edit(Code);        
+    }
+
+    // 
+    async add_menu(){        
+        var Name = await this.prompt_for_dashed_name();
+        if (Name==null) return;
+        var Dir = this.Proj_Dir;
+        const id = thisclass.id;
+
+        // Check menu existence
+        var Path = `src/modules/menus/${Name}.js`;
+
+        if (await files.dir_file_exists(Dir, Path)){
+            ui.alert("Menu of such name is existing");
+            return;
+        }
+
+        // Write new module
+        var Code = 
+        `export default [\n`+
+        `    ["🅰️Item A","method_a"],\n`+
+        `    ["🅱️Item B","method_b"]\n`+
+        `];`;
+
+        var File = await files.dir_path2file(Dir, Path);
+        await files.write_file(File,Code);
+        ui.alert(`Added menu '${Name}'`);
+    }
+
+    //
+    async edit_menu(){
+        // Get menu list
+        var Dir = this.Proj_Dir;
+        Dir = await files.dir_path2dir(Dir,"src/modules/menus");
+        var Files = (await files.dir_get_files(Dir)).map(X=>X.name);
+        
+        if (Files.length==0){
+            ui.alert("No menus to edit, add first");
+            return;
+        }
+        Files.sort();
+
+        // Select
+        var Obj = {};
+        for (let Name of Files) 
+            if (Name.match(/\.js$/)!=null) Obj[Name]=Name;
+
+        var Choice = await ui.select("Choose a menu to edit:",Obj);
+        if (Choice==null) return;
+
+        // Show editor
+        var File     = await files.dir_path2file(Dir, Choice);
+        var [_,Code] = await files.read_file(File);
+        this.Cur_Special = "src/modules/menus/"+Choice;
+        this.show_special_edit(Code);        
     }
 
     //
@@ -683,5 +827,6 @@ class home extends base_controller{
     }
 }
 
+const thisclass = home;
 export default home;
 // EOF

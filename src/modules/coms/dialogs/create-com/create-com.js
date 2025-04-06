@@ -27,6 +27,10 @@ class create_com extends base_controller{
             ui.alert("Only alphanumeric and dash for component name");
             return;
         }
+        if (Name.match(/^[0-9]+/) != null){
+            ui.alert("Can't start with digits");
+            return;
+        }
         Name           = Name.toLowerCase();
         var Class_Name = Name.replaceAll("-","_");
 
