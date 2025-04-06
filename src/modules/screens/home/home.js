@@ -246,6 +246,7 @@ class home extends base_controller{
             Proj_Name:Dir.name, Screens, Components
         });
         ui.notif("Project loaded");
+        d$("#Proj-Name").innerHTML = Dir.name;
     }
 
     // Build app
