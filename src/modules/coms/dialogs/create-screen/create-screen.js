@@ -8,21 +8,20 @@ import utils from "../../../utils.js";
 import controller_template from "../../../../data/controller-template.js";
 
 // Class
-class create_screen /*extends wpower.base_controller*/ {
+class create_screen extends wpower.base_controller {
 
     // Ctor
     constructor(){
-        // super();
-        extend(this, new wpower.base_controller());
+        super();
     }
 
     _____DATA_____(){}
 
     // Create new screen
     async create_screen(Ev){
-        const {cvm,files,base_controller} = wpower;
-        ui.close_dialogs();
+        const {cvm,files,base_controller} = wpower;       
         var Name = this.$(".scr-name").value.trim();
+        ui.close_dialogs();
         if (Name.length==0) return;
 
         // Check format
@@ -84,7 +83,7 @@ class create_screen /*extends wpower.base_controller*/ {
     _____CORE_____(){}
 
     // Init
-    init(){
+    init(){    
         super.init(this);
     }
 
