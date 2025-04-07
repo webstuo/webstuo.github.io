@@ -1,10 +1,11 @@
-// Utils
+// Utils file
+
 // Libs
 import wpower from "../libs/wpower/wpower.js";
 
 function _____UTILS_____(){}
 
-// 
+// Parse without exception
 function int(V) {
     try{
         return parseInt(V);
@@ -124,6 +125,7 @@ class utils {
     // Get method list from Wpower controller
     static get_methods(Js){
         const {ut,ui,cvm,base_controller,files} = wpower;
+
         try{
             // Acorn is old, can't parse fields and static fields in class
             // as properties of class.
@@ -192,7 +194,7 @@ class utils {
         return Lines.join("\n");
     }
 
-    //
+    // Get code of static block
     static get_staticblock_code(Fulljs){
         const {ut,ui,cvm,base_controller,files} = wpower;
         try{
@@ -222,9 +224,10 @@ class utils {
         }
     }
 
-    //
+    // Get code of properties lines
     static get_propsblock_code(Fulljs){
         const {ut,ui,cvm,base_controller,files} = wpower;
+
         try{
             var Prog  = thisclass.parse_js(Fulljs);
             var Nodes = [];            
@@ -258,7 +261,7 @@ class utils {
         }
     }
 
-    //
+    // Check if AST has a class
     static has_class_declared(Prog){
         const {ut,ui,cvm,base_controller,files} = wpower;
 
@@ -274,7 +277,7 @@ class utils {
         const {ut,ui,cvm,base_controller,files} = wpower;
 
         try{
-            var Prog = thisclass.parse_js(Fulljs);
+            var Prog  = thisclass.parse_js(Fulljs);
             var Class = null;
 
             // Find class
@@ -290,7 +293,7 @@ class utils {
             }
 
             // Find method
-            var Methods = Class.body.body;
+            var Methods   = Class.body.body;
             var Methodobj = null;
 
             for (let Item of Methods)
@@ -322,12 +325,12 @@ class utils {
         }
     }
 
-    //
+    // Replace method in AST
     static replace_method(Filejs,Newnode){
         const {ut,ui,cvm,base_controller,files} = wpower;
         
         try{
-            var Prog = thisclass.parse_js(Filejs);
+            var Prog  = thisclass.parse_js(Filejs);
             var Class = null;
 
             // Find class
@@ -343,7 +346,7 @@ class utils {
             }
 
             // Find method
-            var Methods = Class.body.body;
+            var Methods   = Class.body.body;
             var Methodobj = null;
             var i;
 

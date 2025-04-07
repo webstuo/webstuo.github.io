@@ -1,3 +1,4 @@
+// Libs
 import wpower from "../../../../libs/wpower/wpower.js";
 
 // Modules
@@ -6,16 +7,18 @@ import utils from "../../../utils.js";
 // Data
 import controller_template from "../../../../data/controller-template.js";
 
-//
-class create_com extends wpower.base_controller{
-    //
+// Create component
+class create_com /*extends wpower.base_controller*/ {
+
+    // Ctor
     constructor(){
-        super();
+        // super();
+        extend(this, new wpower.base_controller());
     }
 
     _____DATA_____(){}
 
-    //
+    // Create component
     async create_com(Ev){
         const {cvm,files,base_controller} = wpower;
         ui.close_dialogs();
@@ -42,8 +45,8 @@ class create_com extends wpower.base_controller{
         }
 
         // Check if existing
-        var Home = cvm.get_screen("home");
-        var Dir  = Home.Proj_Dir;
+        var Home     = cvm.get_screen("home");
+        var Dir      = Home.Proj_Dir;
         var Js_File  = await files.dir_file_exists(Dir,`src/modules/coms/${Name}/${Name}.js`);
         var Html_File= await files.dir_file_exists(Dir,`src/modules/coms/${Name}/${Name}.html`);
         var Css_File = await files.dir_file_exists(Dir,`src/modules/coms/${Name}/${Name}.css`);
@@ -55,8 +58,8 @@ class create_com extends wpower.base_controller{
 
         // Get template
         var Defaulthtml = `${Name}\n<!-- EOF -->`;
-        var Defaultcss = `/* EOF */`;
-        var [Html,Css] = await utils.choose_template(Defaulthtml, Defaultcss);
+        var Defaultcss  = `/* EOF */`;
+        var [Html,Css]  = await utils.choose_template(Defaulthtml, Defaultcss);
 
         // Create folder and file
         var Js_File  = await files.dir_path2file(Dir,`src/modules/coms/${Name}/${Name}.js`);
@@ -72,7 +75,7 @@ class create_com extends wpower.base_controller{
         cvm.get_screen("home").open_proj(false);
     }
 
-    //
+    // Close dlg
     cancel(Ev){
         const {cvm,files,base_controller} = wpower;
         ui.close_dialogs();
@@ -80,16 +83,16 @@ class create_com extends wpower.base_controller{
 
     _____CORE_____(){}
 
-    //
+    // Init
     init(){
         super.init(this);
     }
 
-    // 
+    // Init
     render(){        
     }
 
-    //
+    // More data
     async load_data(){
     }
 }

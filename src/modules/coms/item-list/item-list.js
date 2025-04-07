@@ -9,68 +9,69 @@ import edit_ctx_menu from "../../menus/edit-ctx-menu.js";
 import edit_module_menu from "../../menus/edit-module-menu.js";
 import edit_menu_menu from "../../menus/edit-menu-menu.js";
 
-//
+// Class
 class item_list extends wpower.base_controller{
-    // 
+
+    // Ctor
     constructor(){
         super();
     }
 
     _____UI_ACTIONS_____(){}
 
-    // 
+    // Info
     add_resource(Ev){
         ui.alert(`Open project dir → src to add resources, 
             app root dir is at src without root slash`);
     }
 
-    // 
+    // Edit index.html
     edit_global_html(Ev){
         const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").edit_global_html();
     }
 
-    // 
+    // Edit index.css
     edit_global_css(Ev){
         const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").edit_global_css();
     }
 
-    // 
+    // Add new .js file under /modules
     add_module(){
         const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").add_module();
     }
 
-    // 
+    // Edit a .js file in /modules
     edit_module(Ev){
         const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").edit_module();
     }
 
-    // 
+    // Delete module
     del_module(Ev){        
         ui.alert("Go to project dir → src/modules to remove");
     }
 
-    // 
+    // Add new menu to app
     add_menu(){
         const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").add_menu();
     }
 
-    // 
+    // Edit a menu in app
     edit_menu(Ev){
         const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").edit_menu();
     }
 
-    // 
+    // Del a menu
     del_menu(Ev){
         ui.alert("Go to project dir → src/modules/menus to remove");
     }
 
-    //
+    // Edit js methods
     async edit_js(Ev){
         const {ut,ui,cvm,base_controller,files} = wpower;
         var Ele  = Ev.target;
@@ -99,7 +100,7 @@ class item_list extends wpower.base_controller{
         Home.show_js_methods(Methods);
     }
 
-    //
+    // Open WYSIWYG editor
     launch_comvise(Ev){
         window.open("https://comvise.github.io");
     }
@@ -119,11 +120,11 @@ class item_list extends wpower.base_controller{
         touch(this.Data,"Components",[]);
     }
 
-    // 
+    // Render
     render(){
     }
 
-    //
+    // More data
     async load_data(){
     }
 }

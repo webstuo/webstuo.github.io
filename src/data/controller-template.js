@@ -1,23 +1,25 @@
 export default 
 `import wpower from "../../../libs/wpower/wpower.js";
 
-class #NAME extends wpower.base_controller{
+class #NAME /*extends wpower.base_controller*/ {
 
     // Ctor 
     constructor(){
-        super();
+        // super();
+        // Dynamic inheritance to avoid circular dependencies
+        extend(this, new wpower.base_controller());
     }
 
-    // Init
+    // Init (before making DOM)
     init(){
         super.init(this);
     }
 
-    // Render
+    // Render (after making DOM, for events,etc.)
     render(){
     }
 
-    // Load data
+    // Load data (after render, extra data beside this.Data)
     async load_data(){
     }
 }

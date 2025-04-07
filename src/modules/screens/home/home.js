@@ -1,3 +1,4 @@
+// Libs
 import wpower from "../../../libs/wpower/wpower.js";
 
 // Data
@@ -8,16 +9,16 @@ function _____CLASS_____(){}
 
 // Home screen
 class home extends wpower.base_controller{
-    Wpowerjs = "";
+    Wpowerjs  = "";
     Wpowercss = "";
-    Indexjs = "";
+    Indexjs   = "";
     Indexhtml = "";
-    Indexcss = "";
-    Run_Cmd = "cd src; python -m http.server 1234";
+    Indexcss  = "";
+    Run_Cmd   = "cd src; python -m http.server 1234";
     Proj_Dir;
     Screen_Dirs = [];
-    Com_Dirs = [];
-    Termi = null;
+    Com_Dirs    = [];
+    Termi       = null;
 
     Js_Editor     = null;
     Cur_Special   = null; // "index.css", or other values
@@ -41,19 +42,19 @@ class home extends wpower.base_controller{
     async add_dyn_items(Html){
         const {base_controller,files,ui,cvm,net} = wpower;
         // Get screen dirs
-        var Dir = this.Proj_Dir;
-        var Tmpdir = await files.dir_path2dir(Dir,"src/modules/screens");
+        var Dir         = this.Proj_Dir;
+        var Tmpdir      = await files.dir_path2dir(Dir,"src/modules/screens");
         var Screen_Dirs = await files.dir_get_subdirs(Tmpdir);
-        var Scr_Names = Screen_Dirs.map(X=>X.name);
+        var Scr_Names   = Screen_Dirs.map(X=>X.name);
 
         // Get component dirs
-        var Tmpdir = await files.dir_path2dir(Dir,"src/modules/coms");
-        var Com_Dirs = await files.dir_get_subdirs(Tmpdir);
+        var Tmpdir    = await files.dir_path2dir(Dir,"src/modules/coms");
+        var Com_Dirs  = await files.dir_get_subdirs(Tmpdir);
         var Com_Names = Com_Dirs.map(X=>X.name);
 
         // Imports of screen
         Scr_Names = Scr_Names.filter(X=>X!="home");
-        var Code = "";
+        var Code  = "";
         function id(Str){ return Str.replaceAll("-","_"); }
 
         for (let Name of Scr_Names)
@@ -216,15 +217,15 @@ class home extends wpower.base_controller{
         await files.dir_file_touch(Dir,"webstuo.json");
 
         // Get screen dirs
-        var Tmpdir = await files.dir_path2dir(Dir,"src/modules/screens");
+        var Tmpdir       = await files.dir_path2dir(Dir,"src/modules/screens");
         this.Screen_Dirs = await files.dir_get_subdirs(Tmpdir);
 
         // Get component dirs
-        var Tmpdir = await files.dir_path2dir(Dir,"src/modules/coms");
+        var Tmpdir    = await files.dir_path2dir(Dir,"src/modules/coms");
         this.Com_Dirs = await files.dir_get_subdirs(Tmpdir);
 
         // Make screen & com data
-        var Screens = [];
+        var Screens    = [];
         var Components = [];
 
         for (let S of this.Screen_Dirs)
@@ -254,6 +255,7 @@ class home extends wpower.base_controller{
     // Build app
     async build_app(Ev){
         const {base_controller,files,ui,cvm,net} = wpower;
+
         if (this.Proj_Dir==null){
             ui.alert("Please load project first");
             return;
@@ -269,9 +271,9 @@ class home extends wpower.base_controller{
         ui.alert("Core files written to project folder");
     }
 
-    //
+    // Run app (info only)
     run_app(Ev){
-        const {base_controller,files,ui,cvm,net} = wpower;
+        const {ui} = wpower;
         ui.alert(`Open shell <b>in project folder</b> and run either of run.sh, run.ps1, or run.cmd.<br> 
             To view the app, point browser to 
             <a target="_blank" href="http://localhost:1234">http://localhost:1234</a><br>
@@ -280,7 +282,7 @@ class home extends wpower.base_controller{
 
     _____Js_Man_____(){}
 
-    //
+    // Get js file
     async get_jsfile_code(){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Filejs = await utils.get_jsfile_code(this.Cur_Js_Type, this.Cur_Js_File);
@@ -303,7 +305,7 @@ class home extends wpower.base_controller{
         return Css;
     }
 
-    //
+    // Add new method to js file
     async add_new_method(){
         const {base_controller,files,ui,cvm,net} = wpower;
         // No file loaded
@@ -312,7 +314,7 @@ class home extends wpower.base_controller{
             return;
         }
 
-        // 
+        // Input
         var Name = await ui.prompt("Enter new method name:");
         if (Name==null || Name.trim().length==0) return;
 
@@ -363,7 +365,7 @@ class home extends wpower.base_controller{
         this.show_js_methods([...Methods, Name]);
     }
 
-    // 
+    // Del method
     async del_method(Methodname){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Confirm = await ui.confirm(`Sure to delete method '<b>${Methodname}</b>'?`);
@@ -420,6 +422,7 @@ class home extends wpower.base_controller{
     // Save to file
     async save_to_file(Ev){
         const {base_controller,files,ui,cvm,net} = wpower;
+
         if (this.Cur_Special=="index.html"){
             var Html = this.Js_Editor.getValue();
             var File = await files.dir_path2file(this.Proj_Dir, "src/index.html");
@@ -562,7 +565,7 @@ class home extends wpower.base_controller{
 
     _____Other_Uis_____(){}
 
-    // 
+    // Get a name
     async prompt_for_dashed_name(){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Name = await ui.prompt("Enter a name:");
@@ -580,7 +583,7 @@ class home extends wpower.base_controller{
         return Name;
     }
 
-    //
+    // Edit static block
     async edit_staticblock(){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Fulljs = await utils.get_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File);
@@ -588,11 +591,11 @@ class home extends wpower.base_controller{
         if (Code==null) return;
 
         this.Cur_Js_Method = "---staticblock---";
-        this.Cur_Special = null; // Normal js
+        this.Cur_Special   = null; // Normal js
         this.show_js_edit(Code);        
     }
 
-    //
+    // Edit properties block
     async edit_propsblock(){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Fulljs = await utils.get_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File);
@@ -600,23 +603,23 @@ class home extends wpower.base_controller{
         if (Code==null) return;
 
         this.Cur_Js_Method = "---propsblock---";
-        this.Cur_Special = null; // Normal js
+        this.Cur_Special   = null; // Normal js
         this.show_js_edit(Code);        
     }
 
-    //
+    // Edit a method
     async edit_method(Methodname){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Fulljs = await utils.get_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File);
-        var Code = utils.get_method_code(Fulljs,Methodname);
+        var Code   = utils.get_method_code(Fulljs,Methodname);
         if (Code==null) return;
 
         this.Cur_Js_Method = Methodname;
-        this.Cur_Special = null; // Normal js
+        this.Cur_Special   = null; // Normal js
         this.show_js_edit(Code);        
     }
 
-    //
+    // Edit index.html
     async edit_global_html(){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Fullhtml = await this.get_indexhtml_code();
@@ -624,7 +627,7 @@ class home extends wpower.base_controller{
         this.show_special_edit(Fullhtml);        
     }
 
-    //
+    // Edit index.css
     async edit_global_css(){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Fullcss = await this.get_indexcss_code();
@@ -632,12 +635,13 @@ class home extends wpower.base_controller{
         this.show_special_edit(Fullcss);        
     }
 
-    // 
+    // Add new module under /modules
     async add_module(){
         const {base_controller,files,ui,cvm,net} = wpower;
         var Name = await this.prompt_for_dashed_name();
         if (Name==null) return;
-        var Dir = this.Proj_Dir;
+
+        var Dir  = this.Proj_Dir;
         const id = thisclass.id;
 
         // Check module existence
@@ -659,12 +663,12 @@ class home extends wpower.base_controller{
         ui.alert(`Added module '${Name}'`);
     }
 
-    //
+    // Edit a .js file under /modules
     async edit_module(){
         const {base_controller,files,ui,cvm,net} = wpower;
         // Get module list
-        var Dir = this.Proj_Dir;
-        Dir = await files.dir_path2dir(Dir,"src/modules");
+        var Dir   = this.Proj_Dir;
+        Dir       = await files.dir_path2dir(Dir,"src/modules");
         var Files = (await files.dir_get_files(Dir)).map(X=>X.name);
         
         if (Files.length==0){
@@ -675,6 +679,7 @@ class home extends wpower.base_controller{
 
         // Select
         var Obj = {};
+
         for (let Name of Files) 
             if (Name.match(/\.js$/)!=null) Obj[Name]=Name;
 
@@ -688,12 +693,13 @@ class home extends wpower.base_controller{
         this.show_special_edit(Code);        
     }
 
-    // 
+    // Add new menu file
     async add_menu(){        
         const {base_controller,files,ui,cvm,net} = wpower;
         var Name = await this.prompt_for_dashed_name();
         if (Name==null) return;
-        var Dir = this.Proj_Dir;
+
+        var Dir  = this.Proj_Dir;
         const id = thisclass.id;
 
         // Check menu existence
@@ -716,12 +722,12 @@ class home extends wpower.base_controller{
         ui.alert(`Added menu '${Name}'`);
     }
 
-    //
+    // Edit menu file
     async edit_menu(){
         const {base_controller,files,ui,cvm,net} = wpower;
         // Get menu list
-        var Dir = this.Proj_Dir;
-        Dir = await files.dir_path2dir(Dir,"src/modules/menus");
+        var Dir   = this.Proj_Dir;
+        Dir       = await files.dir_path2dir(Dir,"src/modules/menus");
         var Files = (await files.dir_get_files(Dir)).map(X=>X.name);
         
         if (Files.length==0){
@@ -732,6 +738,7 @@ class home extends wpower.base_controller{
 
         // Select
         var Obj = {};
+
         for (let Name of Files) 
             if (Name.match(/\.js$/)!=null) Obj[Name]=Name;
 
@@ -739,13 +746,13 @@ class home extends wpower.base_controller{
         if (Choice==null) return;
 
         // Show editor
-        var File     = await files.dir_path2file(Dir, Choice);
-        var [_,Code] = await files.read_file(File);
+        var File         = await files.dir_path2file(Dir, Choice);
+        var [_,Code]     = await files.read_file(File);
         this.Cur_Special = "src/modules/menus/"+Choice;
         this.show_special_edit(Code);        
     }
 
-    //
+    // Show js of a method to edit
     show_js_methods(Methodnames){
         const {base_controller,files,ui,cvm,net} = wpower;
         cvm.get_last_com("method-list").rerender({
