@@ -19,6 +19,7 @@ function _____CORE_____(){}
 
 // Main
 async function main(){
+    cvm.init();
     lang.set_phrases(Phrases);
 
     await cvm.dyn_screens({
