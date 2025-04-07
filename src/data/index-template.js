@@ -1,8 +1,5 @@
 export default 
-`// Anti-circular
-window.extend = Object.setPrototypeOf;
-
-// Libs
+`// Libs
 import wpower from "./libs/wpower/wpower.js";
 
 // Screens and components
