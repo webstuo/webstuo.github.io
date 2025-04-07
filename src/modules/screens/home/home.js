@@ -1,5 +1,4 @@
 import wpower from "../../../libs/wpower/wpower.js";
-const {base_controller,files,ui,cvm,net} = wpower;
 
 // Data
 import index_template_js from "../../../data/index-template.js";
@@ -8,7 +7,7 @@ import Phrases           from "../../../data/phrases-template.js";
 function _____CLASS_____(){}
 
 // Home screen
-class home extends base_controller{
+class home extends wpower.base_controller{
     Wpowerjs = "";
     Wpowercss = "";
     Indexjs = "";
@@ -40,6 +39,7 @@ class home extends base_controller{
 
     // Add items to dyn_screens, and dyn_coms
     async add_dyn_items(Html){
+        const {base_controller,files,ui,cvm,net} = wpower;
         // Get screen dirs
         var Dir = this.Proj_Dir;
         var Tmpdir = await files.dir_path2dir(Dir,"src/modules/screens");
@@ -110,6 +110,7 @@ class home extends base_controller{
     // Write base code to project
     // NOTICE: Most of conditions are 'true', to write latest code base
     async check_and_write_core(Dir){
+        const {base_controller,files,ui,cvm,net} = wpower;
         // Project marker file
         var F = await files.dir_path2file(Dir,"webstuo.json"); // JSON
         await files.write_file(F,"{}");
@@ -191,6 +192,7 @@ class home extends base_controller{
 
     // Open proj
     async open_proj(open=true){
+        const {base_controller,files,ui,cvm,net} = wpower;
         if (open){
             await ui.alert(`Choose existing Webstuo project folder or 
                 create new empty folder in the next dialog.`);
@@ -251,6 +253,7 @@ class home extends base_controller{
 
     // Build app
     async build_app(Ev){
+        const {base_controller,files,ui,cvm,net} = wpower;
         if (this.Proj_Dir==null){
             ui.alert("Please load project first");
             return;
@@ -268,6 +271,7 @@ class home extends base_controller{
 
     //
     run_app(Ev){
+        const {base_controller,files,ui,cvm,net} = wpower;
         ui.alert(`Open shell <b>in project folder</b> and run either of run.sh, run.ps1, or run.cmd.<br> 
             To view the app, point browser to 
             <a target="_blank" href="http://localhost:1234">http://localhost:1234</a><br>
@@ -278,12 +282,14 @@ class home extends base_controller{
 
     //
     async get_jsfile_code(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Filejs = await utils.get_jsfile_code(this.Cur_Js_Type, this.Cur_Js_File);
         return Filejs;
     }
 
     // Get index.html code
     async get_indexhtml_code(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var File    = await files.dir_path2file(this.Proj_Dir, "src/index.html");
         var [_,Html]= await files.read_file(File);
         return Html;
@@ -291,6 +297,7 @@ class home extends base_controller{
 
     // Get index.css code
     async get_indexcss_code(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var File    = await files.dir_path2file(this.Proj_Dir, "src/index.css");
         var [_,Css] = await files.read_file(File);
         return Css;
@@ -298,6 +305,7 @@ class home extends base_controller{
 
     //
     async add_new_method(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         // No file loaded
         if (this.Cur_Js_File == null){
             ui.alert("No file loaded yet, click Edit JS in centre column");
@@ -357,6 +365,7 @@ class home extends base_controller{
 
     // 
     async del_method(Methodname){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Confirm = await ui.confirm(`Sure to delete method '<b>${Methodname}</b>'?`);
         if (Confirm!="yes") return;
 
@@ -410,6 +419,7 @@ class home extends base_controller{
 
     // Save to file
     async save_to_file(Ev){
+        const {base_controller,files,ui,cvm,net} = wpower;
         if (this.Cur_Special=="index.html"){
             var Html = this.Js_Editor.getValue();
             var File = await files.dir_path2file(this.Proj_Dir, "src/index.html");
@@ -554,6 +564,7 @@ class home extends base_controller{
 
     // 
     async prompt_for_dashed_name(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Name = await ui.prompt("Enter a name:");
         if (Name==null || Name.trim().length==0) return null;
         Name = Name.trim();
@@ -571,6 +582,7 @@ class home extends base_controller{
 
     //
     async edit_staticblock(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Fulljs = await utils.get_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File);
         var Code   = utils.get_staticblock_code(Fulljs);
         if (Code==null) return;
@@ -582,6 +594,7 @@ class home extends base_controller{
 
     //
     async edit_propsblock(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Fulljs = await utils.get_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File);
         var Code   = utils.get_propsblock_code(Fulljs);
         if (Code==null) return;
@@ -593,6 +606,7 @@ class home extends base_controller{
 
     //
     async edit_method(Methodname){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Fulljs = await utils.get_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File);
         var Code = utils.get_method_code(Fulljs,Methodname);
         if (Code==null) return;
@@ -604,6 +618,7 @@ class home extends base_controller{
 
     //
     async edit_global_html(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Fullhtml = await this.get_indexhtml_code();
         this.Cur_Special = "index.html";
         this.show_special_edit(Fullhtml);        
@@ -611,6 +626,7 @@ class home extends base_controller{
 
     //
     async edit_global_css(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Fullcss = await this.get_indexcss_code();
         this.Cur_Special = "index.css";
         this.show_special_edit(Fullcss);        
@@ -618,6 +634,7 @@ class home extends base_controller{
 
     // 
     async add_module(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Name = await this.prompt_for_dashed_name();
         if (Name==null) return;
         var Dir = this.Proj_Dir;
@@ -644,6 +661,7 @@ class home extends base_controller{
 
     //
     async edit_module(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         // Get module list
         var Dir = this.Proj_Dir;
         Dir = await files.dir_path2dir(Dir,"src/modules");
@@ -672,6 +690,7 @@ class home extends base_controller{
 
     // 
     async add_menu(){        
+        const {base_controller,files,ui,cvm,net} = wpower;
         var Name = await this.prompt_for_dashed_name();
         if (Name==null) return;
         var Dir = this.Proj_Dir;
@@ -699,6 +718,7 @@ class home extends base_controller{
 
     //
     async edit_menu(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         // Get menu list
         var Dir = this.Proj_Dir;
         Dir = await files.dir_path2dir(Dir,"src/modules/menus");
@@ -727,6 +747,7 @@ class home extends base_controller{
 
     //
     show_js_methods(Methodnames){
+        const {base_controller,files,ui,cvm,net} = wpower;
         cvm.get_last_com("method-list").rerender({
             Methods: Methodnames
         });
@@ -734,6 +755,7 @@ class home extends base_controller{
 
     // Show js edit
     show_js_edit(Code){
+        const {base_controller,files,ui,cvm,net} = wpower;
         // Remove tailing comments
         var Lines     = Code.trim().split("\n");
         var n         = Lines.length;
@@ -755,6 +777,7 @@ class home extends base_controller{
 
     // Show css edit
     show_special_edit(Anycode){
+        const {base_controller,files,ui,cvm,net} = wpower;
         // Show
         d$("#Js-File-Name").innerHTML = this.Cur_Special;
         d$("#Js-Edit-Wrap").removeAttribute("hidden");
@@ -775,6 +798,7 @@ class home extends base_controller{
 
     // Render
     render(){
+        const {base_controller,files,ui,cvm,net} = wpower;
         // JS editor
         this.Js_Editor = CodeMirror.fromTextArea(d$("#Js-Edit"),{
             lineNumbers:true, mode:"javascript", indentUnit:4, tabSize:4,
@@ -818,6 +842,7 @@ class home extends base_controller{
 
     // Load data
     async load_data(){
+        const {net} = wpower;
         // For adding to apps
         this.Wpowerjs  = await net.get("libs/wpower/wpower.js","text/plain");
         this.Wpowercss = await net.get("libs/wpower/wpower.css","text/plain");

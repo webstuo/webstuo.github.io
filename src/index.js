@@ -1,6 +1,5 @@
 // Libs
 import wpower from "./libs/wpower/wpower.js";
-const {cvm} = wpower;
 
 // Modules
 import Phrases from "./modules/phrases.js";
@@ -19,6 +18,7 @@ function _____CORE_____(){}
 
 // Main
 async function main(){
+    const {cvm,lang} = wpower;
     cvm.init();
     lang.set_phrases(Phrases);
 

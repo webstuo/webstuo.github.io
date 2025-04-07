@@ -1,22 +1,16 @@
 // Libs
 import wpower from "../../../libs/wpower/wpower.js";
-const {ut,ui,cvm,base_controller,files} = wpower;
 
 // Modules
 import utils from "../../utils.js";
 
 // Menu
 import edit_ctx_menu from "../../menus/edit-ctx-menu.js";
-cvm.reg_menu("edit-ctx-menu",edit_ctx_menu);
-
 import edit_module_menu from "../../menus/edit-module-menu.js";
-cvm.reg_menu("edit-module-menu",edit_module_menu);
-
 import edit_menu_menu from "../../menus/edit-menu-menu.js";
-cvm.reg_menu("edit-menu-menu",edit_menu_menu);
 
 //
-class item_list extends base_controller{
+class item_list extends wpower.base_controller{
     // 
     constructor(){
         super();
@@ -32,36 +26,42 @@ class item_list extends base_controller{
 
     // 
     edit_global_html(Ev){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").edit_global_html();
     }
 
     // 
     edit_global_css(Ev){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").edit_global_css();
     }
 
     // 
     add_module(){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").add_module();
     }
 
     // 
     edit_module(Ev){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").edit_module();
     }
 
     // 
-    del_module(Ev){
+    del_module(Ev){        
         ui.alert("Go to project dir → src/modules to remove");
     }
 
     // 
     add_menu(){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").add_menu();
     }
 
     // 
     edit_menu(Ev){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         cvm.get_screen("home").edit_menu();
     }
 
@@ -72,6 +72,7 @@ class item_list extends base_controller{
 
     //
     async edit_js(Ev){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         var Ele  = Ev.target;
         var Type = Ele.attr("type");
         var Name = Ele.attr("name");
@@ -107,7 +108,12 @@ class item_list extends base_controller{
 
     // Init
     init(){
+        const {cvm} = wpower;
         super.init(this);
+        cvm.reg_menu("edit-ctx-menu",edit_ctx_menu);
+        cvm.reg_menu("edit-module-menu",edit_module_menu);
+        cvm.reg_menu("edit-menu-menu",edit_menu_menu);
+
         touch(this.Data,"Proj_Name");
         touch(this.Data,"Screens",[]);
         touch(this.Data,"Components",[]);

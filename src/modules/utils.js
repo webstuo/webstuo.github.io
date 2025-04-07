@@ -1,7 +1,6 @@
 // Utils
 // Libs
 import wpower from "../libs/wpower/wpower.js";
-const {ut,ui,cvm,base_controller,files} = wpower;
 
 function _____UTILS_____(){}
 
@@ -33,6 +32,7 @@ class utils {
 
     // Choose template
     static async choose_template(Defaulthtml, Defaultcss){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         var Choice = await ui.select("Choose template to use:",{
             blank: "Empty Template",
             with_both_sides: "With Both Sides",
@@ -90,6 +90,7 @@ class utils {
 
     // Get js
     static async get_jsfile_code(Type,Name){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         var Dir = cvm.get_screen("home").Proj_Dir;
 
         if (Type=="screen"){
@@ -105,6 +106,7 @@ class utils {
 
     // Write js
     static async write_jsfile_code(Type,Name, Jscode){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         var Dir = cvm.get_screen("home").Proj_Dir;
 
         if (Type=="screen"){
@@ -121,6 +123,7 @@ class utils {
 
     // Get method list from Wpower controller
     static get_methods(Js){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         try{
             // Acorn is old, can't parse fields and static fields in class
             // as properties of class.
@@ -164,6 +167,7 @@ class utils {
 
     // Parse code to AST with comments in place (.leadingComments, .trailingComments)
     static parse_js(Code){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         return Babel.packages.parser.parse(Code,{ 
             attachComment: true, comments:true, sourceType:"module"
         }).program;
@@ -171,6 +175,7 @@ class utils {
 
     // Ast_Node can be .program, or any body[i] which is parsed by utils.parse_js 
     static ast_node_to_js(Ast_Node){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         var Code = Babel.packages.generator.generate(Ast_Node,{
             comments:true
         }).code;
@@ -189,6 +194,7 @@ class utils {
 
     //
     static get_staticblock_code(Fulljs){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         try{
             var Prog  = thisclass.parse_js(Fulljs);
             var Nodes = [];
@@ -218,6 +224,7 @@ class utils {
 
     //
     static get_propsblock_code(Fulljs){
+        const {ut,ui,cvm,base_controller,files} = wpower;
         try{
             var Prog  = thisclass.parse_js(Fulljs);
             var Nodes = [];            
@@ -253,6 +260,8 @@ class utils {
 
     //
     static has_class_declared(Prog){
+        const {ut,ui,cvm,base_controller,files} = wpower;
+
         for (let Item of Prog.body)
             if (Item.type == "ClassDeclaration")
                 return true;
@@ -262,6 +271,8 @@ class utils {
 
     // Get method source code
     static get_method_code(Fulljs, Methodname){
+        const {ut,ui,cvm,base_controller,files} = wpower;
+
         try{
             var Prog = thisclass.parse_js(Fulljs);
             var Class = null;
@@ -313,6 +324,8 @@ class utils {
 
     //
     static replace_method(Filejs,Newnode){
+        const {ut,ui,cvm,base_controller,files} = wpower;
+        
         try{
             var Prog = thisclass.parse_js(Filejs);
             var Class = null;

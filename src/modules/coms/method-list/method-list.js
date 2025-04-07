@@ -1,11 +1,10 @@
 //
 import wpower from "../../../libs/wpower/wpower.js";
-const {cvm,base_controller} = wpower;
 
 function _____CLASS_____(){}
 
 //
-class method_list extends base_controller{
+class method_list extends wpower.base_controller{
 
     // 
     constructor(){
@@ -14,22 +13,26 @@ class method_list extends base_controller{
 
     // 
     load_staticblock(Ev){
+        const {cvm,base_controller} = wpower;
         cvm.get_screen("home").edit_staticblock();
     }
 
     //
     load_propsblock(Ev){
+        const {cvm,base_controller} = wpower;
         cvm.get_screen("home").edit_propsblock();
     }
 
     //
     load_method_js(Ev){
+        const {cvm,base_controller} = wpower;
         var Methodname = Ev.target.attr("name");
         cvm.get_screen("home").edit_method(Methodname);
     }
 
     //
     del_method(Ev){
+        const {cvm,base_controller} = wpower;
         var Methodname = Ev.target.attr("name");
         cvm.get_screen("home").del_method(Methodname);
     }

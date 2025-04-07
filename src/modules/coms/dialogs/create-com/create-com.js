@@ -1,5 +1,4 @@
 import wpower from "../../../../libs/wpower/wpower.js";
-const {cvm,files,base_controller} = wpower;
 
 // Modules
 import utils from "../../../utils.js";
@@ -8,7 +7,7 @@ import utils from "../../../utils.js";
 import controller_template from "../../../../data/controller-template.js";
 
 //
-class create_com extends base_controller{
+class create_com extends wpower.base_controller{
     //
     constructor(){
         super();
@@ -18,6 +17,7 @@ class create_com extends base_controller{
 
     //
     async create_com(Ev){
+        const {cvm,files,base_controller} = wpower;
         ui.close_dialogs();
         var Name = this.$(".com-name").value.trim();
         if (Name.length==0) return;
@@ -74,6 +74,7 @@ class create_com extends base_controller{
 
     //
     cancel(Ev){
+        const {cvm,files,base_controller} = wpower;
         ui.close_dialogs();
     }
 

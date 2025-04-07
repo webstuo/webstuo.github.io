@@ -1,6 +1,5 @@
 export default 
 `import wpower from "./libs/wpower/wpower.js";
-const {base_controller, cvm, files, lang, net, ui, ut, idb, enc, gfs} = wpower;
 
 // Screens and components
 import home_js from "./modules/screens/home/home.js";
@@ -12,6 +11,7 @@ import Phrases from "./modules/phrases.js";
 
 // Main
 async function main(){
+    const {cvm,lang} = wpower;
     cvm.init();
     lang.set_phrases(Phrases);
 
