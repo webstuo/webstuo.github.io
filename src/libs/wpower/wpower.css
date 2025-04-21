@@ -55,6 +55,12 @@ Notes:
 .ctx-menu-item:hover {
     background-color:ivory;
 }
+.wp-tree-item:hover {
+    background-color:ivory;
+}
+.wp-tree-menubtn:hover {
+    background-color:yellow;
+}
 
 @media(min-width:1000px){
     #Notif-Col{

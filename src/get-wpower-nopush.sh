@@ -1,13 +1,13 @@
 Dir=$(pwd)
-cd /mnt/c/novaeh/sobuuk/client/libs/wpower
+cd /mnt/c/novaeh/wpower
 echo "Web packing Wpower..."
 bash pack.sh
 
 cd $Dir
 echo -e "\nCopying..."
-cp -f /mnt/c/novaeh/sobuuk/client/libs/wpower/dist/wpower.js \
+cp -f /mnt/c/novaeh/wpower/dist/wpower.js \
     ./libs/wpower/wpower.js
-cp -f /mnt/c/novaeh/sobuuk/client/libs/wpower/dist/wpower.css \
+cp -f /mnt/c/novaeh/wpower/dist/wpower.css \
     ./libs/wpower/wpower.css    
 echo Done.
 # EOF
