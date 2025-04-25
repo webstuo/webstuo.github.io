@@ -52,6 +52,9 @@ Notes:
     table, tr, td { margin:0; padding:0; text-align:left; vertical-align:top; }
 }
 
+.ctx-menu-item {
+    white-space:nowrap;
+}
 .ctx-menu-item:hover {
     background-color:ivory;
 }
