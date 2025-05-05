@@ -1,5 +1,6 @@
 export default 
-`// Libs
+`// ***** CREATED BY WEBSTUO, DONT EDIT *****
+// Libs
 import wpower from "./libs/wpower/wpower.js";
 
 // Screens and components
