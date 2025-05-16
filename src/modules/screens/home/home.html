@@ -7,13 +7,15 @@
         Click item in centre to show JS
         <div id="Js-Methods-Box">
             <div>
-                <b>Sort</b>: 
-                <span class="sort-btn" 
+                <b>Action</b>: 
+                <span class="act-btn" 
                     onclick="ui.alert('Method list is now sorted in alphabetic order');" 
-                    title="Alphabetic">🆎</span>
-                <span class="sort-btn" onclick="ui.alert('Feature coming soon');" 
-                    title="By region in code">🗺️</span>
-                <span class="add-met-btn" onclick="method:add_new_method" 
+                    title="Sort alphabetically">🆎</span>
+                <span class="act-btn" onclick="ui.alert('Feature coming soon');" 
+                    title="Sort by region in code">🗺️</span>
+                <span class="act-btn find-met-btn" onclick="method:find_anything" 
+                    title="Find anything by comment and name">🔍</span>
+                <span class="act-btn add-met-btn" onclick="method:add_new_method" 
                     title="Add new method">➕</span>
             </div>
             <div com="method-list"></div>

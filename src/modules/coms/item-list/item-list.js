@@ -5,9 +5,11 @@ import wpower from "../../../libs/wpower/wpower.js";
 import utils from "../../utils.js";
 
 // Menu
-import edit_ctx_menu from "../../menus/edit-ctx-menu.js";
+import edit_ctx_menu    from "../../menus/edit-ctx-menu.js";
 import edit_module_menu from "../../menus/edit-module-menu.js";
-import edit_menu_menu from "../../menus/edit-menu-menu.js";
+import edit_menu_menu   from "../../menus/edit-menu-menu.js";
+
+function _____CLASS_____(){}
 
 // Class
 class item_list extends wpower.base_controller{
@@ -111,9 +113,9 @@ class item_list extends wpower.base_controller{
     init(){
         const {cvm} = wpower;
         super.init(this);
-        cvm.reg_menu("edit-ctx-menu",edit_ctx_menu);
-        cvm.reg_menu("edit-module-menu",edit_module_menu);
-        cvm.reg_menu("edit-menu-menu",edit_menu_menu);
+        cvm.reg_menu("edit-ctx-menu",    edit_ctx_menu);
+        cvm.reg_menu("edit-module-menu", edit_module_menu);
+        cvm.reg_menu("edit-menu-menu",   edit_menu_menu);
 
         touch(this.Data,"Proj_Name");
         touch(this.Data,"Screens",[]);

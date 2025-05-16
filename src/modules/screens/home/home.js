@@ -5,6 +5,7 @@ import wpower from "../../../libs/wpower/wpower.js";
 import index_template_js from "../../../data/index-template.js";
 import Phrases           from "../../../data/phrases-template.js";
 
+function OX_INDENT_hasall(){}
 function _____CLASS_____(){}
 
 // Home screen
@@ -340,7 +341,7 @@ class home extends wpower.base_controller{
         }
 
         // Create new node
-        var Code    = `class _ { ${Name}(){} }`;
+        var Code    = `class _ { ${Name}(Param){} }`;
         var Temp    = utils.parse_js(Code);
         var Newnode = Temp.body[0].body.body[0];
 
@@ -363,6 +364,122 @@ class home extends wpower.base_controller{
 
         // Reload ui
         this.show_js_methods([...Methods, Name]);
+    }
+
+    // Check if AST item has matching name or leading comment
+    ast_item_has(Item,Text){
+        Text     = Text.toLowerCase();
+        var Toks = Text.split("\x20").filter(X => X.length>0);
+
+        function all_toks_are_in(Str){
+            Str = Str.toLowerCase();
+
+            for (let T of Toks)
+                if (Str.toLowerCase().indexOf(T) == -1)
+                    return false;
+
+            return true;
+        }
+
+        // Combine a string to find inside
+        var Str = "";
+        if (Item.id!=null) {
+            Str       += Item.id.name;
+            Item.Name  = Item.id.name;
+        }
+        if (Item.key!=null) { // Class method
+            Str       += Item.key.name;
+            Item.Name  = Item.key.name;
+        }
+
+        // Check name in: VariableDeclaration
+        if (Item.type == "VariableDeclaration"){
+            for (let Dec of Item.declarations)
+                if (Dec.id!=null){
+                    Str       += "\x20" + Dec.id.name;
+                    Item.Name  = Dec.id.name;
+                }
+        }
+
+        // Check leading comment
+        if (Item.leadingComments != null)
+            for (let C of Item.leadingComments)
+                Str += "\x20" + C.value;
+
+        return all_toks_are_in(Str);
+    }
+
+    // Find items in AST, results are accumulated to Results param
+    find_in_ast(Results, Js, Src_Type, Src_Name, Text){
+        var Ast= utils.parse_js(Js);
+
+        // Find direct item
+        for (let Item of Ast.body)
+            if (this.ast_item_has(Item,Text))
+                Results.push({ 
+                    Type:Src_Type, Name:Src_Name, inside_class:false,
+                    Item_Type:Item.type, Item_Name:Item.Name 
+                });
+
+        // Find in classes
+        for (let Class of Ast.body.filter(X => X.type=="ClassDeclaration"))
+            for (let Item of Class.body.body)
+                if (this.ast_item_has(Item,Text))
+                    Results.push({ 
+                        Type:Src_Type, Name:Src_Name, inside_class:true,
+                        Item_Type:Item.type, Item_Name:Item.Name 
+                    });
+    }
+
+    // Find anything in all modules, screens, and components
+    async find_anything(Ev){
+        const {ui} = wpower;
+
+        if (this.Proj_Dir == null){
+            ui.alert("Project not yet loaded!");
+            return;
+        }
+        var Text   = await ui.prompt("Enter comment or name to find:");
+        if (Text==null || Text.length==0) return;
+        var Results = []; // Methods found
+
+        // Find in modules
+        var Modules = await utils.get_module_list();
+
+        for (let M of Modules){
+            let Js = await utils.get_modulefile_code(M);
+            this.find_in_ast(Results, Js,"module",M, Text);
+        }
+
+        // Find in screens
+        var Screens = (await utils.get_scr_list()).map(X => X.Name);
+
+        for (let S of Screens){
+            let Js = await utils.get_jsfile_code("screen",S);
+            this.find_in_ast(Results, Js,"screen",S, Text);
+        }
+
+        // Find in components
+        var Coms = (await utils.get_com_list()).map(X => X.Name);
+
+        for (let C of Coms){
+            let Js = await utils.get_jsfile_code("component",C);
+            this.find_in_ast(Results, Js,"component",C, Text);
+        }
+
+        // Show result
+        var Html = `<div>`;
+
+        for (let R of Results)
+            Html += 
+            `<div>
+                <big><b>${R.Item_Name}</b></big> (<u>${R.Item_Type}</u>, 
+                inside class: ${R.inside_class})<br>
+                Found in: ${R.Type} <b>${R.Name}</b><hr>
+            </div>`;
+
+        Html += `</div>`;
+        ui.alert(Html);
     }
 
     // Del method

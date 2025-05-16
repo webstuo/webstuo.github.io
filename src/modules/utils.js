@@ -88,6 +88,18 @@ class utils {
     }
 
     _____FILE_OPS_____(){}
+    _____Single_Item_____(){}    
+
+    // Get module js
+    // Name is without '.js'
+    static async get_modulefile_code(Name){
+        const {cvm,files} = wpower;
+        var Dir = cvm.get_screen("home").Proj_Dir;
+
+        let File = await files.dir_path2file(Dir,`src/modules/${Name}.js`);
+        var [Handle,Js] = await files.read_file(File);
+        return Js;
+    }
 
     // Get js
     static async get_jsfile_code(Type,Name){
@@ -118,6 +130,68 @@ class utils {
             let File = await files.dir_path2file(Dir,`src/modules/coms/${Name}/${Name}.js`);
             await files.write_file(File,Jscode);   
         }
+    }
+
+    _____Metainfo_____(){}
+
+    // Get module list
+    static async get_module_list(){
+        const {cvm,files} = wpower;
+
+        // Get module list
+        var Dir   = cvm.get_screen("home").Proj_Dir;
+        Dir       = await files.dir_path2dir(Dir,"src/modules");
+        var Files = (await files.dir_get_files(Dir)).map(X=>X.name.replace(".js",""));
+        Files.sort();
+        return Files;
+    }
+
+    // Get screen list
+    static async get_scr_list(){
+        const {files} = wpower;
+        var Dir = cvm.get_screen("home").Proj_Dir;
+
+        // Get screen dirs
+        var Tmpdir       = await files.dir_path2dir(Dir,"src/modules/screens");
+        this.Screen_Dirs = await files.dir_get_subdirs(Tmpdir);
+
+        // Make screen & com data
+        var Screens    = [];
+
+        for (let S of this.Screen_Dirs)
+            Screens.push({ Name:S.name });
+
+        // Sort
+        Screens.sort((A,B)=>{
+            if (A.Name < B.Name) return -1;
+            if (A.Name > B.Name) return 1;
+            return 0;
+        });
+        return Screens;
+    }
+
+    // Get component list
+    static async get_com_list(){
+        const {files} = wpower;
+        var Dir = cvm.get_screen("home").Proj_Dir;
+
+        // Get component dirs
+        var Tmpdir    = await files.dir_path2dir(Dir,"src/modules/coms");
+        this.Com_Dirs = await files.dir_get_subdirs(Tmpdir);
+
+        // Make screen & com data
+        var Components = [];
+
+        for (let C of this.Com_Dirs)
+            Components.push({ Name:C.name });
+
+        // Sort
+        Components.sort((A,B)=>{
+            if (A.Name < B.Name) return -1;
+            if (A.Name > B.Name) return 1;
+            return 0;
+        });
+        return Components;
     }
 
     _____JS_PARSING_____(){}

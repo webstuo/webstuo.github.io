@@ -64,6 +64,12 @@ Notes:
 .wp-tree-menubtn:hover {
     background-color:yellow;
 }
+.hover-light:hover {
+    background-color:ivory !important;
+}
+.hover-contrast:hover {
+    background-color:yellow !important;
+}
 
 @media(min-width:1000px){
     #Notif-Col{
