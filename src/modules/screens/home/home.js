@@ -478,8 +478,12 @@ class home extends wpower.base_controller{
                 Found in: ${R.Type} <b>${R.Name}</b><hr>
             </div>`;
 
-        Html += `</div>`;
-        ui.alert(Html);
+        if (Results.length>0){
+            Html += `</div>`;
+            ui.alert(Html);
+        }
+        else
+            ui.alert("Nothing found!");
     }
 
     // Del method
