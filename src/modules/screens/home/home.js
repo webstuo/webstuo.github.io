@@ -349,7 +349,7 @@ class home extends wpower.base_controller{
         }
 
         // Create new node
-        var Code    = `class _ { ${Name}(Param){} }`;
+        var Code    = `class _ { ${Name}($){} }`;
         var Temp    = utils.parse_js(Code);
         var Newnode = Temp.body[0].body.body[0];
 
