@@ -12,6 +12,12 @@
             <button onclick="menu:edit-module-menu">modules</button>
             <button onclick="menu:edit-menu-menu">menus</button>
         </div>
+        <div>
+            <span for="M: let M of Modules">
+                <button class="item-btn" onclick="method:edit_module_direct"
+                name="{{this}}">{{this}}</button>
+            </span>
+        </div>
     </div>
     <div>&nbsp;</div>
 

@@ -51,6 +51,12 @@ class item_list extends wpower.base_controller{
         cvm.get_screen("home").edit_module();
     }
 
+    // Edit module, directly from button, not from dropdown list
+    edit_module_direct(Ev){
+        var Name = Ev.target.attr("name");
+        cvm.get_screen("home").edit_module(Name);
+    }
+
     // Delete module
     del_module(Ev){        
         ui.alert("Go to project dir → src/modules to remove");
@@ -120,6 +126,7 @@ class item_list extends wpower.base_controller{
         touch(this.Data,"Proj_Name");
         touch(this.Data,"Screens",[]);
         touch(this.Data,"Components",[]);
+        touch(this.Data,"Modules",[]);
     }
 
     // Render

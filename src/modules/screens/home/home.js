@@ -234,6 +234,12 @@ class home extends wpower.base_controller{
         for (let C of this.Com_Dirs)
             Components.push({ Name:C.name });
 
+        // Get module list
+        var Moddir= await files.dir_path2dir(Dir,"src/modules");
+        var Files = (await files.dir_get_files(Moddir)).map(X=>X.name);
+        Files.sort();
+        var Modules = Files;
+
         // UI
         Screens.sort((A,B)=>{
             if (A.Name < B.Name) return -1;
@@ -247,7 +253,7 @@ class home extends wpower.base_controller{
         });
 
         cvm.get_last_com("item-list").rerender({
-            Proj_Name:Dir.name, Screens, Components
+            Proj_Name:Dir.name, Screens, Components, Modules
         });
         ui.notif("Project loaded");
         d$("#Proj-Name").innerHTML = Dir.name;
@@ -822,27 +828,33 @@ class home extends wpower.base_controller{
     }
 
     // Edit a .js file under /modules
-    async edit_module(){
+    async edit_module(Mod_Name=null){
         const {base_controller,files,ui,cvm,net} = wpower;
-        // Get module list
-        var Dir   = this.Proj_Dir;
-        Dir       = await files.dir_path2dir(Dir,"src/modules");
-        var Files = (await files.dir_get_files(Dir)).map(X=>X.name);
-        
-        if (Files.length==0){
-            ui.alert("No modules to edit, add first");
-            return;
+        var Dir = this.Proj_Dir;
+        Dir     = await files.dir_path2dir(Dir,"src/modules");
+        var Choice;
+
+        if (Mod_Name==null){
+            // Get module list                        
+            var Files = (await files.dir_get_files(Dir)).map(X=>X.name);
+            
+            if (Files.length==0){
+                ui.alert("No modules to edit, add first");
+                return;
+            }
+            Files.sort();
+
+            // Select
+            var Obj = {};
+
+            for (let Name of Files) 
+                if (Name.match(/\.js$/)!=null) Obj[Name]=Name;
+
+            Choice = await ui.select("Choose a module to edit:",Obj);
+            if (Choice==null) return;
         }
-        Files.sort();
-
-        // Select
-        var Obj = {};
-
-        for (let Name of Files) 
-            if (Name.match(/\.js$/)!=null) Obj[Name]=Name;
-
-        var Choice = await ui.select("Choose a module to edit:",Obj);
-        if (Choice==null) return;
+        else
+            Choice = Mod_Name;
 
         // Show editor
         var File     = await files.dir_path2file(Dir, Choice);
