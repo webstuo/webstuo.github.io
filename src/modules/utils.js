@@ -110,9 +110,18 @@ class utils {
             let File = await files.dir_path2file(Dir,`src/modules/screens/${Name}/${Name}.js`);
             var [Handle,Js] = await files.read_file(File);
         }
-        else{
+        else
+        if (Type=="component"){
             let File = await files.dir_path2file(Dir,`src/modules/coms/${Name}/${Name}.js`);
             var [Handle,Js] = await files.read_file(File);
+        }
+        else
+        if (Type=="module"){
+            let File   = await files.dir_path2file(Dir,`src/modules/${Name}`);
+            var [_,Js] = await files.read_file(File);
+        }
+        else{
+            ui.alert("No such code type: "+Type);
         }
         return Js;
     }
@@ -126,9 +135,18 @@ class utils {
             let File = await files.dir_path2file(Dir,`src/modules/screens/${Name}/${Name}.js`);
             await files.write_file(File,Jscode);   
         }
-        else{
+        else
+        if (Type=="component"){
             let File = await files.dir_path2file(Dir,`src/modules/coms/${Name}/${Name}.js`);
             await files.write_file(File,Jscode);   
+        }
+        else
+        if (Type=="module"){
+            let File = await files.dir_path2file(Dir,`src/modules/${Name}`);
+            await files.write_file(File,Jscode);   
+        }
+        else{
+            ui.alert("No such code type: "+Type);
         }
     }
 

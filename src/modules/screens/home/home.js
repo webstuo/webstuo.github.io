@@ -286,7 +286,15 @@ class home extends wpower.base_controller{
     // Get js file
     async get_jsfile_code(){
         const {base_controller,files,ui,cvm,net} = wpower;
-        var Filejs = await utils.get_jsfile_code(this.Cur_Js_Type, this.Cur_Js_File);
+        var Filejs;
+
+        if (this.Cur_Js_Type != "module")
+            Filejs = await utils.get_jsfile_code(this.Cur_Js_Type, this.Cur_Js_File);
+        else{
+            let File  = await files.dir_path2file(this.Proj_Dir,"src/modules/"+this.Cur_Js_File);
+            let [_,Js]= await files.read_file(File);
+            Filejs    = Js;
+        }
         return Filejs;
     }
 
@@ -355,15 +363,27 @@ class home extends wpower.base_controller{
                 break;
             }
 
+        if (Class==null){
+            ui.alert("No class found, can't add method");
+            return;
+        }
         Class.body.body.push(Newnode);
         var Newjs = utils.ast_node_to_js(Ast);
         
         // Save
-        utils.write_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File,Newjs);
+        await utils.write_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File,Newjs);
         ui.notif("Save successfully","green");
 
         // Reload ui
-        this.show_js_methods([...Methods, Name]);
+        if (this.Cur_Js_Type != "module")
+            this.show_js_methods([...Methods, Name]);
+        else
+            this.show_js_methods([...Methods, Name], "module");
+
+        if (this.Cur_Js_Type=="module"){
+            let Js = await utils.get_jsfile_code("module", this.Cur_Js_File);
+            this.show_special_edit(Js);
+        }
     }
 
     // Check if AST item has matching name or leading comment
@@ -500,7 +520,11 @@ class home extends wpower.base_controller{
         var Name = Methodname;
 
         // Check if existing
-        var Js      = await this.get_jsfile_code();
+        if (this.Cur_Js_Type != "module")
+            var Js = await this.get_jsfile_code();
+        else
+            var Js = await utils.get_jsfile_code("module",this.Cur_Js_File);
+
         var Methods = utils.get_methods(Js);
 
         if (Methods.indexOf(Name)==-1){
@@ -519,6 +543,10 @@ class home extends wpower.base_controller{
                 break;
             }
 
+        if (Class==null){
+            ui.alert("No class found in file");
+            return;
+        }
         for (let i=0; i<Class.body.body.length; i++)
             if (Class.body.body[i].key.name == Name){
                 met_idx = i;
@@ -530,12 +558,21 @@ class home extends wpower.base_controller{
         var Newjs = utils.ast_node_to_js(Ast);
         
         // Save
-        utils.write_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File,Newjs);
+        await utils.write_jsfile_code(this.Cur_Js_Type,this.Cur_Js_File,Newjs);
         ui.notif("Save successfully","green");
 
         // Reload ui
         Methods = Methods.filter(X => X!=Name);
-        this.show_js_methods(Methods);
+
+        if (this.Cur_Js_Type != "module")
+            this.show_js_methods([...Methods]);
+        else
+            this.show_js_methods([...Methods], "module");
+
+        if (this.Cur_Js_Type=="module"){
+            let Js = await utils.get_jsfile_code("module", this.Cur_Js_File);
+            this.show_special_edit(Js);
+        }
     }
 
     _____Editor_Uis_____(){}
@@ -543,7 +580,7 @@ class home extends wpower.base_controller{
     // Save to file
     async save_to_file(Ev){
         const {base_controller,files,ui,cvm,net} = wpower;
-
+        
         if (this.Cur_Special=="index.html"){
             var Html = this.Js_Editor.getValue();
             var File = await files.dir_path2file(this.Proj_Dir, "src/index.html");
@@ -811,7 +848,21 @@ class home extends wpower.base_controller{
         var File     = await files.dir_path2file(Dir, Choice);
         var [_,Code] = await files.read_file(File);
         this.Cur_Special = "src/modules/"+Choice;
-        this.show_special_edit(Code);        
+        this.show_special_edit(Code);      
+
+        // Show in side bar
+        // Load js file
+        var Dir    = this.Proj_Dir;
+        var File   = await files.dir_path2file(Dir,`src/modules/${Choice}`);
+        var [_,Js] = await files.read_file(File);
+
+        // Get methods from abstract syntax tree
+        var Methods = utils.get_methods(Js);        
+
+        // Show editor
+        this.Cur_Js_Type = "module";
+        this.Cur_Js_File = Choice;
+        this.show_js_methods(Methods,"module");
     }
 
     // Add new menu file
@@ -874,10 +925,10 @@ class home extends wpower.base_controller{
     }
 
     // Show js of a method to edit
-    show_js_methods(Methodnames){
+    show_js_methods(Methodnames,Type=null){
         const {base_controller,files,ui,cvm,net} = wpower;
         cvm.get_last_com("method-list").rerender({
-            Methods: Methodnames
+            Methods: Methodnames, Type
         });
     }
 

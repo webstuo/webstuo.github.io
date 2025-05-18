@@ -44,6 +44,9 @@ class method_list extends wpower.base_controller{
         super.init(this);
         touch(this.Data,"Methods",[]);
 
+        if (this.Data.Type != "module"){
+            this.Data.Type = "non-module";
+        }
         this.Data.Methods = this.Data.Methods.filter(X=>
             X!="constructor" && X!="init" && X!="render" && X!="load_data"
         );

@@ -10,12 +10,18 @@
     
     <a href="javascript:" name="constructor" title="JS constructor"
         onclick="method:load_method_js">constructor</a><br>
-    <a href="javascript:" name="init" title="Runs before rendering DOM"
-        onclick="method:load_method_js">init</a><br>
-    <a href="javascript:" name="render" title="Runs after rendering DOM" 
-        onclick="method:load_method_js">render</a><br>
-    <a href="javascript:" name="load_data" title="Extra method for loading more data"
-        onclick="method:load_method_js">load_data</a>
+    <div if="Type!='module'">
+        <a href="javascript:" name="init" title="Runs before rendering DOM"
+            onclick="method:load_method_js">init</a>
+    </div>
+    <div if="Type!='module'">
+        <a href="javascript:" name="render" title="Runs after rendering DOM" 
+            onclick="method:load_method_js">render</a>
+    </div>
+    <div if="Type!='module'">
+        <a href="javascript:" name="load_data" title="Extra method for loading more data"
+            onclick="method:load_method_js">load_data</a>
+    </div>
     <hr>
 
     <div for="M: let M of Methods" class="cus-method-item">
