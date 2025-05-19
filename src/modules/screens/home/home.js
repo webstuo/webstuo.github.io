@@ -4,8 +4,12 @@ import wpower from "../../../libs/wpower/wpower.js";
 // Data
 import index_template_js from "../../../data/index-template.js";
 import Phrases           from "../../../data/phrases-template.js";
+import Install_Script    from "../../../data/run-install.js";
+import Webpack_Script    from "../../../data/run-webpack.js";
+import Webpack_Configdev from "../../../data/webpack-configdev.js";
+import Webpack_Config    from "../../../data/webpack-config.js";
 
-function OX_INDENT_hasall(){}
+function OX_INDENT_hasall_id(){}
 function _____CLASS_____(){}
 
 // Home screen
@@ -40,7 +44,7 @@ class home extends wpower.base_controller{
     _____BUILD_____(){}
 
     // Add items to dyn_screens, and dyn_coms
-    async add_dyn_items(Html){
+    async add_dyn_items(Indexjs){
         const {base_controller,files,ui,cvm,net} = wpower;
         // Get screen dirs
         var Dir         = this.Proj_Dir;
@@ -61,7 +65,7 @@ class home extends wpower.base_controller{
         for (let Name of Scr_Names)
             Code += `import ${id(Name)} from "./modules/screens/${Name}/${Name}.js";\n`;
 
-        Html = Html.replace("#IMPORT_SCREENS",Code);
+        Indexjs = Indexjs.replace("#IMPORT_SCREENS",Code);
 
         // Imports of components
         var Code = "";
@@ -69,11 +73,33 @@ class home extends wpower.base_controller{
         for (let Name of Com_Names)
             Code += `import ${id(Name)} from "./modules/coms/${Name}/${Name}.js";\n`;
 
-        Html = Html.replace("#IMPORT_COMS",Code.trim());
+        Indexjs = Indexjs.replace("#IMPORT_COMS",Code.trim());
 
-        // Dyn load of screens
+        // Static load of screens (if packed)
         var Indent;
         var Code = "";
+
+        for (let i=0; i<Scr_Names.length; i++){
+            if (i>0) Indent = "\x20".repeat(8);
+            else     Indent = "";
+            let Indent2     = "\x20".repeat(8);
+
+            let Name = Scr_Names[i];
+            let Line1= `window._Screen_Html["${Name}"] = `+
+                       `(await import("./modules/screens/${Name}/${Name}.html")).default.toString();`;
+            let Line2= `window._Screen_Css ["${Name}"] = `+
+                       `(await import("./modules/screens/${Name}/${Name}.css")).default.toString();`;
+
+            Code += `${Indent}${Line1}\n`;
+            Code += `${Indent2}${Line2}\n`;
+        }        
+        if (Code.length>0)
+            Indexjs = Indexjs.replace("#SCREEN_HTMLCSS_LIST", Code);
+        else
+            Indexjs = Indexjs.replace("#SCREEN_HTMLCSS_LIST", "// More here");        
+
+        // Dyn load of screens
+        Code = "";
 
         for (let i=0; i<Scr_Names.length; i++){
             if (i>0) Indent = "\x20".repeat(8);
@@ -81,16 +107,37 @@ class home extends wpower.base_controller{
 
             let Name = Scr_Names[i];
             Code += `${Indent}"${Name}": [${id(Name)},"modules/screens/${Name}"],\n`;
-        }
-        
+        }        
         if (Code.length>0)
-            Html = Html.replace("#SCREEN_LIST", Code);
+            Indexjs = Indexjs.replace("#SCREEN_LIST", Code);
         else
-            Html = Html.replace("#SCREEN_LIST", "// More here");
+            Indexjs = Indexjs.replace("#SCREEN_LIST", "// More here");
 
-        // Dyn load of screens        
+        // Static load of components (if packed)
         var Code = "";
         var Indent;
+        
+        for (let i=0; i<Com_Names.length; i++){
+            if (i>0) Indent = "\x20".repeat(8);
+            else     Indent = "";
+            let Indent2     = "\x20".repeat(8);
+
+            let Name = Com_Names[i];
+            let Line1= `window._Com_Html["${Name}"] = `+
+                       `(await import("./modules/coms/${Name}/${Name}.html")).default.toString();`;
+            let Line2= `window._Com_Css ["${Name}"] = `+
+                       `(await import("./modules/coms/${Name}/${Name}.css")).default.toString();`;
+
+            Code += `${Indent}${Line1}\n`;
+            Code += `${Indent2}${Line2}\n`;
+        }        
+        if (Code.length>0)
+            Indexjs = Indexjs.replace("#COM_HTMLCSS_LIST", Code);
+        else
+            Indexjs = Indexjs.replace("#COM_HTMLCSS_LIST", "// More here");        
+
+        // Dyn load of components
+        Code = "";
 
         for (let i=0; i<Com_Names.length; i++){
             if (i>0) Indent = "\x20".repeat(8);
@@ -99,14 +146,13 @@ class home extends wpower.base_controller{
             let Name = Com_Names[i];
             Code += `${Indent}"${Name}": [${id(Name)},"modules/coms/${Name}"],\n`;
         }
-
         if (Code.trim().length>0)
-            Html = Html.replace("#COM_LIST", Code.trim());
+            Indexjs = Indexjs.replace("#COM_LIST", Code.trim());
         else
-            Html = Html.replace("#COM_LIST", "// More here");
+            Indexjs = Indexjs.replace("#COM_LIST", "// More here");
 
         // After modifying
-        return Html;
+        return Indexjs;
     }
 
     // Write base code to project
@@ -116,6 +162,31 @@ class home extends wpower.base_controller{
         // Project marker file
         var F = await files.dir_path2file(Dir,"webstuo.json"); // JSON
         await files.write_file(F,"{}");
+
+        // .gitignore
+        var Gitig_File = await files.dir_file_exists(Dir,".gitignore");
+
+        if (!Gitig_File){
+            let Text = `node_modules\n__pycache__\n`;
+            let File = await files.dir_path2file(Dir,".gitignore");
+            await files.write_file(File,Text);
+        }
+
+        // webpack.configdev.js
+        var existing = await files.dir_file_exists(Dir,"src/webpack.configdev.js");
+
+        if (!existing){
+            let File = await files.dir_path2file(Dir,"src/webpack.configdev.js");
+            await files.write_file(File,Webpack_Configdev);
+        }
+
+        // webpack.config.js
+        var existing = await files.dir_file_exists(Dir,"src/webpack.config.js");
+
+        if (!existing){
+            let File = await files.dir_path2file(Dir,"src/webpack.config.js");
+            await files.write_file(File,Webpack_Config);
+        }
 
         // Wpower
         var Wpowerjs_File = await files.dir_file_exists(Dir,"src/libs/wpower/wpower.js");
@@ -187,6 +258,15 @@ class home extends wpower.base_controller{
             File_Cmd = await files.dir_path2file(Dir,"run.cmd");
             await files.write_file(File_Cmd,this.Run_Cmd+"\n");
         }
+
+        // Run files (web pack)
+        var Script = Install_Script.toString();
+        var File = await files.dir_path2file(Dir,"src/run-install.sh");
+        await files.write_file(File,Script);
+
+        var Script = Webpack_Script.toString();
+        var File = await files.dir_path2file(Dir,"src/run-webpack.sh");
+        await files.write_file(File,Script);
     }
 
     _____UI_ACTIONS_____(){}
@@ -284,7 +364,11 @@ class home extends wpower.base_controller{
         ui.alert(`Open shell <b>in project folder</b> and run either of run.sh, run.ps1, or run.cmd.<br> 
             To view the app, point browser to 
             <a target="_blank" href="http://localhost:1234">http://localhost:1234</a><br>
-            Remember to install Python first.`);
+            Remember to install Python first.<br><br>
+            Webpack:<br>
+            Go to 'src' folder and run 'run-webpack.sh'<br>
+            To view the app, point browser to 
+            <a target="_blank" href="http://localhost:8080">http://localhost:8080</a>`);
     }
 
     _____Js_Man_____(){}
