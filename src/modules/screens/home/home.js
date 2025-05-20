@@ -430,8 +430,11 @@ class home extends wpower.base_controller{
             ui.alert("Method is existing");
             return;
         }
-        var Reserveds = ["constructor", "$", "$$", "remove_self", "init", 
-                         "render", "rerender", "load_data"];
+        if (this.Cur_Js_Type != "module")
+            var Reserveds = ["constructor", "$", "$$", "remove_self", "init", 
+                             "render", "rerender", "load_data"];
+        else
+            var Reserveds = [];
 
         if (Reserveds.indexOf(Name)>=0){
             ui.alert("Can't use these names: "+Reserveds.toString());

@@ -46,10 +46,13 @@ class method_list extends wpower.base_controller{
 
         if (this.Data.Type != "module"){
             this.Data.Type = "non-module";
+            this.Data.Methods = this.Data.Methods.filter(X=>
+                X!="constructor" && X!="init" && X!="render" && X!="load_data"
+            );
         }
-        this.Data.Methods = this.Data.Methods.filter(X=>
-            X!="constructor" && X!="init" && X!="render" && X!="load_data"
-        );
+        else{
+            // Keep all methods in module
+        }
         this.Data.Methods.sort();
         this.Data.first_render = true;
     }
@@ -61,9 +64,13 @@ class method_list extends wpower.base_controller{
 
     // Before rerendering
     pre_rerender(){
-        this.Data.Methods = this.Data.Methods.filter(X=>
-            X!="constructor" && X!="init" && X!="render" && X!="load_data"
-        );
+        if (this.Data.Type != "module")
+            this.Data.Methods = this.Data.Methods.filter(X=>
+                X!="constructor" && X!="init" && X!="render" && X!="load_data"
+            );
+        else{ 
+            /* Keep all methods */ 
+        }
         this.Data.Methods.sort();
     }
 
