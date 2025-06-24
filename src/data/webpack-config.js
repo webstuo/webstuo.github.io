@@ -13,6 +13,11 @@ module.exports = {
         libraryTarget: 'module' // To export as MJS
     },
     mode: 'production', // development, production
+    devServer: {
+        // Must be false, 
+        // or webpack-serve shows 'HMR is not implemented' error
+        hot: false 
+    },
     module: {
         rules: [{
             test:   /\.html$/i,
