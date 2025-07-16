@@ -16,11 +16,14 @@ module.exports = {
     devServer: {
         // Must be false, 
         // or webpack-serve shows 'HMR is not implemented' error
-        hot: false 
+        hot: false,
+        host: '0.0.0.0', // Not working, still binds to Windows interface
+        port: 8080,
+        allowedHosts: 'all' // No help for binding
     },
     module: {
         rules: [{
-            test:   /\.html$/i,
+            test:   /.html$/i,
             loader: "html-loader",
             options: {
                 // Disables attributes processing (inc src="...")
@@ -28,7 +31,7 @@ module.exports = {
                 minimize: false
             }
         },{
-            test:   /\.css$/i,
+            test:   /.css$/i,
             loader: "css-loader",
             options:{
                 // Disable parsing url in CSS, no known domain yet

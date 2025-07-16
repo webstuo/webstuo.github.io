@@ -1,5 +1,6 @@
 export default
-`npx webpack --config webpack.configdev.js
+`rm dist/*.js
+npx webpack --config webpack.config.js
 
 if [[ ! -d public ]]; then
     mkdir public
@@ -13,7 +14,7 @@ fi
 if [[ ! -d public/libs/wpower ]]; then
     mkdir public/libs/wpower
 fi
-cp -f dist/index.js public/index.js
+cp -f dist/*.js     public/
 cp -f index.html    public/index.html
 cp -f index.css     public/index.css
 cp -f img/icon.png  public/img/icon.png
