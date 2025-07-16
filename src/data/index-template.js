@@ -45,7 +45,14 @@ async function main(){
     await cvm.dyn_coms({
         #COM_LIST
     });
-    cvm.render_screen("home",{});
+
+    // Check 's' param in url
+    var Screen = ut.url_params()["s"];
+
+    if (Screen==null)
+        cvm.render_screen("home",{});
+    else
+        cvm.render_screen(Screen,{});
 }
 window.onload = main;`;
 // EOF
