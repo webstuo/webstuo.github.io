@@ -13,10 +13,11 @@ import Phrases from "./modules/phrases.js";
 
 // Check if app is webpacked
 function is_webpacked(){
-    if (window.onload.toString().indexOf("async function main")==0)
-        return false;
-    else
+    var Str = window.onload.toString();
+    if (Str.indexOf("__webpack")>=0 || Str.indexOf("__WEBPACK")>=0)
         return true;
+    else
+        return false;
 }
 
 // Main
