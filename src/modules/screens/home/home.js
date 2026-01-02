@@ -160,10 +160,10 @@ class home extends wpower.base_controller{
     async check_and_write_core(Dir){
         const {base_controller,files,ui,cvm,net} = wpower;
         // Project marker file
-        var F = await files.dir_path2file(Dir,"webstuo.json"); // JSON
         // LEGACY: WEBSTUO HAS NO AI TAB-BASED SUGGESTIONS
         //         DISABLE WRITING OUT MARKER FILE NOT TO BE
         //         LOADED AND MODIFIED BY WEBSTUO, GENERATES PROJECT ONLY!
+        // var F = await files.dir_path2file(Dir,"webstuo.json"); // JSON
         // await files.write_file(F,"{}");
 
         // .gitignore
@@ -279,8 +279,10 @@ class home extends wpower.base_controller{
     async open_proj(open=true){
         const {base_controller,files,ui,cvm,net} = wpower;
         if (open){
-            await ui.alert(`Choose existing Webstuo project folder or 
-                create new empty folder in the next dialog.`);
+            await ui.alert(
+                `Choose existing Webstuo project folder or 
+                create new empty folder in the next dialog.<br>
+                <b><u>Project Gen Steps</u></b>: <b>Choose empty folder → Add 'home' screen → Press 'Build app'</b>`);
             var Dir = await files.pick_dir();
             this.Proj_Dir = Dir;
         }

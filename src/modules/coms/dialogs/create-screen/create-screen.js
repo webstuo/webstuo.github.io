@@ -71,7 +71,9 @@ class create_screen extends wpower.base_controller {
         await files.write_file(Css_File, Css);
 
         // Rerender
-        cvm.get_screen("home").open_proj(false);
+        // LEGACY: NOT TO REOPEN PROJECT, WEBSTUO IS NOW FOR GENERATING PROJECTS ONLY!
+        // cvm.get_screen("home").open_proj(false);
+        ui.alert("Now press 'Build app' button to generate project!");
     }
 
     // Close dialog
