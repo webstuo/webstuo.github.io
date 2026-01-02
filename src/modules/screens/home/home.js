@@ -304,6 +304,7 @@ class home extends wpower.base_controller{
                 </div>
                 Error: The folder is not empty and it is not Webstuo project folder
             `);
+            this.Proj_Dir = null;
             return;
         }
         // Ensure being Webstuo proj dir
