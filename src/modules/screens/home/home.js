@@ -161,7 +161,10 @@ class home extends wpower.base_controller{
         const {base_controller,files,ui,cvm,net} = wpower;
         // Project marker file
         var F = await files.dir_path2file(Dir,"webstuo.json"); // JSON
-        await files.write_file(F,"{}");
+        // LEGACY: WEBSTUO HAS NO AI TAB-BASED SUGGESTIONS
+        //         DISABLE WRITING OUT MARKER FILE NOT TO BE
+        //         LOADED AND MODIFIED BY WEBSTUO, GENERATES PROJECT ONLY!
+        // await files.write_file(F,"{}");
 
         // .gitignore
         var Gitig_File = await files.dir_file_exists(Dir,".gitignore");
@@ -291,11 +294,21 @@ class home extends wpower.base_controller{
         var cfg_exists = await files.dir_file_exists(Dir,"webstuo.json");
 
         if (Items.length>0 && cfg_exists==false){
-            ui.alert("Error: The folder is not empty and it is not Webstuo project folder");
+            ui.alert(`
+                <div>
+                    <b>LEGACY</b>: WEBSTUO HAS NO AI TAB-BASED SUGGESTIONS.
+                    DISABLED WRITING OUT MARKER FILE NOT TO BE<br>
+                    LOADED AND MODIFIED BY WEBSTUO, GENERATES PROJECT ONLY!
+                </div>
+                Error: The folder is not empty and it is not Webstuo project folder
+            `);
             return;
         }
         // Ensure being Webstuo proj dir
-        await files.dir_file_touch(Dir,"webstuo.json");
+        // LEGACY: WEBSTUO HAS NO AI TAB-BASED SUGGESTIONS
+        //         DISABLE WRITING OUT MARKER FILE NOT TO BE
+        //         LOADED AND MODIFIED BY WEBSTUO, GENERATES PROJECT ONLY!
+        // await files.dir_file_touch(Dir,"webstuo.json");
 
         // Get screen dirs
         var Tmpdir       = await files.dir_path2dir(Dir,"src/modules/screens");
